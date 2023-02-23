@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TwitchPIMP", "TwitchPIMP\TwitchPIMP.csproj", "{5FA5ABB4-C7DA-4F0F-AAC5-F1EE84311A52}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5FA5ABB4-C7DA-4F0F-AAC5-F1EE84311A52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FA5ABB4-C7DA-4F0F-AAC5-F1EE84311A52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FA5ABB4-C7DA-4F0F-AAC5-F1EE84311A52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FA5ABB4-C7DA-4F0F-AAC5-F1EE84311A52}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8E46A1C7-3091-4070-AF9D-D36FB0F93B1E}
+	EndGlobalSection
+EndGlobal

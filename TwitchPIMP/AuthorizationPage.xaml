@@ -1,0 +1,110 @@
+﻿<Page x:Class="TwitchPIMP.AuthorizationPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+      xmlns:local="clr-namespace:TwitchPIMP"
+      mc:Ignorable="d" 
+      d:DesignHeight="600" d:DesignWidth="1000"
+      ShowsNavigationUI="False"
+      Title="AuthorizationPage">
+
+    <Grid>
+        <Image Source="/Assets/login_background.png" Stretch="UniformToFill"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="1.7*"/>
+                <RowDefinition Height="2.8*"/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition/>
+                    <ColumnDefinition Width="1*"/>
+                    <ColumnDefinition Width="0.2*"/>
+                </Grid.ColumnDefinitions>
+                <Grid Grid.Column="1">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="1.6*"/>
+                        <RowDefinition Height="0.7*"/>
+                        <RowDefinition Height="0.4*" />
+                        <RowDefinition Height="0.9*"/>
+                        <RowDefinition Height="0.5*"/>
+                        <RowDefinition Height="1*"/>
+                        <RowDefinition Height="1.4*"/>
+                    </Grid.RowDefinitions>
+                    <Viewbox Grid.Row="0" HorizontalAlignment="Left">
+                        <StackPanel Orientation="Horizontal">
+                            <Image Source="/Assets/logo.png"/>
+                            <Label Content="TwitchPIMP" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" FontSize="53" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,0,0,10"/>
+                        </StackPanel>
+                    </Viewbox>
+                    <Viewbox Grid.Row="2" HorizontalAlignment="Left">
+                        <Label Content="License key" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom"/>
+                    </Viewbox>
+                    <Viewbox Grid.Row="3" HorizontalAlignment="Left">
+                        <TextBox  Background="#16161e" x:Name="KeyTextBox" Margin="0,0,0,5" MinWidth="230" MaxWidth="230" BorderThickness="0" Foreground="#ffffff" FontFamily="{StaticResource Montserrat SemiBold}" KeyDown="TextBox_Key_KeyDown">
+                            <TextBox.Resources>
+                                <Style TargetType="{x:Type Border}">
+                                    <Setter Property="CornerRadius" Value="2"/>
+                                </Style>
+                            </TextBox.Resources>
+                        </TextBox>
+                    </Viewbox>
+                    <Grid Grid.Row="4">
+                        <Grid.ColumnDefinitions >
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="6*"/>
+                            <ColumnDefinition Width="3*"/>
+                        </Grid.ColumnDefinitions>
+                        <ToggleButton Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" x:Name="SaveKey">
+                            <ToggleButton.Template>
+                                <ControlTemplate TargetType="ToggleButton">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Grid>
+                                </ControlTemplate>
+                            </ToggleButton.Template>
+
+                        </ToggleButton>
+                        <Viewbox Grid.Column="1" HorizontalAlignment="Left" Margin="5,0,0,0">
+                            <Label Content="Save Key" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#7981d4" VerticalAlignment="Bottom" Margin="4"/>
+                        </Viewbox>
+                        <Viewbox Grid.Column="3" HorizontalAlignment="Right">
+                            <Label Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#7981d4" VerticalAlignment="Bottom" Margin="4">
+                                <Hyperlink NavigateUri="https://t.me/Saint_Software" RequestNavigate="Hyperlink_Navigate" Foreground="#7981d4" TextDecorations="None">
+                                    Don't have a key?
+                                </Hyperlink>
+                            </Label>
+                        </Viewbox>
+                    </Grid>
+                    <Grid Grid.Row="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="6*"/>
+                        </Grid.ColumnDefinitions>
+                        <Viewbox HorizontalAlignment="Left" VerticalAlignment="Bottom">
+                            <Button BorderThickness="0" Background="Transparent" Click="Button_Sign_In">
+                                <Button.Template>
+                                    <ControlTemplate TargetType="Button">
+                                        <Grid Background="{TemplateBinding Background}">
+                                            <ContentPresenter />
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Button.Template>
+                                <Button.Content>
+                                    <Grid>
+                                        <Image Source="/Assets/button_background.png" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill"/>
+                                        <Label Content="Sign in" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                                    </Grid>
+                                </Button.Content>
+                            </Button>
+                        </Viewbox>
+
+                    </Grid>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

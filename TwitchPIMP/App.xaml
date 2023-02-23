@@ -1,0 +1,34 @@
+﻿<Application x:Class="TwitchPIMP.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:local="clr-namespace:TwitchPIMP"
+             StartupUri="MainWindow.xaml">
+    <Application.Resources>
+        <FontFamily x:Key="Montserrat SemiBold">./Fonts/ofont.ru_Montserrat.ttf#Montserrat SemiBold</FontFamily>
+        <Style x:Key="SwitchStyle" TargetType="ToggleButton">
+            <Style.Triggers>
+                <Trigger Property="IsChecked" Value="True">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Grid>
+                                <Image Source="/Assets/switch _background_on.png" Margin="0,4,0,4"/>
+                                <Image Source="/Assets/switch _circle_on.png" HorizontalAlignment="Right" Margin="0"/>
+                            </Grid>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+                <Trigger Property="IsChecked" Value="False">
+                    <Setter Property="Content">
+                        <Setter.Value>
+                            <Grid>
+                                <Image Source="/Assets/switch _background_off.png" Margin="0,4,0,4"/>
+                                <Image Source="/Assets/switch _circle_off.png" HorizontalAlignment="Left" Margin="0"/>
+                            </Grid>
+                        </Setter.Value>
+                    </Setter>
+                </Trigger>
+
+            </Style.Triggers>
+        </Style>
+    </Application.Resources>
+</Application>

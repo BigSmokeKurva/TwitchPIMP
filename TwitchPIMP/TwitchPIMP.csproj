@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Assets\button_background.png" />
+    <None Remove="Assets\close.png" />
+    <None Remove="Assets\login background.png" />
+    <None Remove="Assets\login_background.png" />
+    <None Remove="Assets\logo.png" />
+    <None Remove="Assets\maximize.png" />
+    <None Remove="Assets\roll.png" />
+    <None Remove="Assets\switch _background_off.png" />
+    <None Remove="Assets\switch _background_on.png" />
+    <None Remove="Assets\switch _circle_off.png" />
+    <None Remove="Assets\switch _circle_on.png" />
+    <None Remove="Fonts\ofont.ru_Montserrat.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Assets\button_background.png" />
+    <Resource Include="Assets\close.png" />
+    <Resource Include="Assets\login_background.png" />
+    <Resource Include="Assets\logo.png" />
+    <Resource Include="Assets\maximize.png" />
+    <Resource Include="Assets\roll.png" />
+    <Resource Include="Assets\switch _background_off.png" />
+    <Resource Include="Assets\switch _background_on.png" />
+    <Resource Include="Assets\switch _circle_off.png" />
+    <Resource Include="Assets\switch _circle_on.png" />
+    <Resource Include="Fonts\ofont.ru_Montserrat.ttf" />
+  </ItemGroup>
+
+</Project>
