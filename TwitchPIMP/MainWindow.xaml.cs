@@ -44,20 +44,43 @@ namespace TwitchPIMP
         }
         private void WindowMoveEvent(object sender, MouseButtonEventArgs e)
         {
-            if(Application.Current.MainWindow.WindowState == WindowState.Maximized)
+            if (Application.Current.MainWindow.WindowState == WindowState.Maximized)
             {
                 Point mousePosition = e.MouseDevice.GetPosition(this);
                 Application.Current.MainWindow.WindowState = WindowState.Normal;
                 Application.Current.MainWindow.Top = mousePosition.Y;
                 Application.Current.MainWindow.Left = mousePosition.X - (((Border)sender).ActualWidth / 2);
             }
-
+            var height = Application.Current.MainWindow.Height;
+            var width = Application.Current.MainWindow.Width;
+            Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
             DragMove();
+            Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
+
+            if (Application.Current.MainWindow.WindowState != WindowState.Maximized && (Application.Current.MainWindow.Height != height || Application.Current.MainWindow.Width != width))
+            {
+                Application.Current.MainWindow.Height = height;
+                Application.Current.MainWindow.Width = width;
+            }
+
         }
 
         private void Button_Close(object sender, RoutedEventArgs e) => Close();
         private void Button_Roll(object sender, RoutedEventArgs e) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
-        private void Button_Maximize(object sender, RoutedEventArgs e) => Application.Current.MainWindow.WindowState = Application.Current.MainWindow.WindowState == WindowState.Maximized ? WindowState.Normal : WindowState.Maximized;
+        private void Button_Maximize(object sender, RoutedEventArgs e)
+        {
+            if (Application.Current.MainWindow.WindowState == WindowState.Maximized)
+            {
+                Application.Current.MainWindow.WindowState = WindowState.Normal;
+            }
+            else
+            {
+                Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
+                Application.Current.MainWindow.WindowState = WindowState.Maximized;
+                Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
+
+            }
+        }
 
     }
 }

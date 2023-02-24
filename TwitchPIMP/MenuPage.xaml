@@ -10,6 +10,170 @@
       Title="MenuPage">
 
     <Grid>
-        <Image Source="/Assets/login_background.png" Stretch="UniformToFill"/>
+        <Image Source="/Assets/menu_background.png" Stretch="UniformToFill"/>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="7*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition/>
+                <ColumnDefinition Width="4*"/>
+            </Grid.ColumnDefinitions>
+            <Viewbox Grid.Row="0" Grid.Column="0">
+                <Label Content="TwitchPIMP" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" FontSize="45" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="20,10,20,20"/>
+            </Viewbox>
+            <Grid Grid.Row="1" Grid.Column="0" x:Name="Menu" Margin="0,20,0,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="2.8*"/>
+                    <RowDefinition Height="1.2*"/>
+                </Grid.RowDefinitions>
+                <Viewbox Grid.Row="0">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="viewersbot">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/viewersbot_icon.png" VerticalAlignment="Center" Margin="5,5,25,5" Height="48"/>
+                                <Label Content="ViewersBot" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="1">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="chatbot">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/chatbot_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5"  Height="48"/>
+                                <Label Content="ChatBot" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="2">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="followbot">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/followbot_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5"  Height="48"/>
+                                <Label Content="FollowBot" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="3">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="tokencheck">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/tokencheck_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5" Height="48"/>
+                                <Label Content="TokenCheck" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="4">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="acctotoken">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/acctotoken_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5" Height="48"/>
+                                <Label Content="Acc to token" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="5">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="bitsender">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/bitsender_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5"  Height="48"/>
+                                <Label Content="BitSender" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="6">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="subbot">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/subbot_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5" Height="48"/>
+                                <Label Content="SubBot" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="7">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="autoreg">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/autoreg_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5" Height="48"/>
+                                <Label Content="Autoreg" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="8">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="adbot">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/adbot_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5" Height="48"/>
+                                <Label Content="AdBot" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="10" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
+                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="30,0,0,0">
+                            <Button.Content>
+                                <Hyperlink NavigateUri="https://t.me/Saint_SIM" RequestNavigate="Hyperlink_Navigate" TextDecorations="None">
+                                    <Image Source="/Assets/channel.png" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Hyperlink>
+                            </Button.Content>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="30,0,0,0">
+                            <Button.Content>
+                                <Hyperlink NavigateUri="https://t.me/Saint_Software" RequestNavigate="Hyperlink_Navigate" TextDecorations="None">
+                                    <Image Source="/Assets/help.png" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                </Hyperlink>
+                            </Button.Content>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+
+                        </Button>
+                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="30,0,0,0" Click="Button_Check_Update">
+                            <Button.Content>
+                                <Image Source="/Assets/update.png" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                            </Button.Content>
+                            <Button.Template>
+                                <ControlTemplate TargetType="Button">
+                                    <Grid Background="{TemplateBinding Background}">
+                                        <ContentPresenter />
+                                    </Grid>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
+                    </StackPanel>
+                </Viewbox>
+            </Grid>
+            <Frame Grid.Row="1" Grid.Column="1" x:Name="NavigationFrame" NavigationUIVisibility="Hidden"/>
+        </Grid>
     </Grid>
 </Page>

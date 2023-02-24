@@ -42,6 +42,9 @@
                     <Viewbox Grid.Row="2" HorizontalAlignment="Left">
                         <Label Content="License key" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom"/>
                     </Viewbox>
+                    <Viewbox Grid.Row="2" HorizontalAlignment="Right">
+                        <Label x:Name="ErrorLabel" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#AA0606" VerticalAlignment="Bottom" Margin="4,4,4,0"/>
+                    </Viewbox>
                     <Viewbox Grid.Row="3" HorizontalAlignment="Left">
                         <TextBox  Background="#16161e" x:Name="KeyTextBox" Margin="0,0,0,5" MinWidth="230" MaxWidth="230" BorderThickness="0" Foreground="#ffffff" FontFamily="{StaticResource Montserrat SemiBold}" KeyDown="TextBox_Key_KeyDown">
                             <TextBox.Resources>

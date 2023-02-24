@@ -37,8 +37,11 @@ namespace TwitchPIMP
             // TODO
             bool saveKey = (bool)SaveKey.IsChecked;
             string key = KeyTextBox.Text.Trim();
-            if (string.IsNullOrEmpty(key))
+            ErrorLabel.Content = string.Empty;
+            if (string.IsNullOrEmpty(key) || string.IsNullOrWhiteSpace(key))
             {
+                ErrorLabel.Content = "Enter the key!";
+                KeyTextBox.Text = string.Empty;
                 return;
             }
             ((Frame)Application.Current.MainWindow.FindName("NavigationFrame")).Navigate(new Uri("MenuPage.xaml", UriKind.Relative));

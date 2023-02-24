@@ -5,34 +5,64 @@
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
+    <UseWindowsForms>True</UseWindowsForms>
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Assets\acctotoken_icon.png" />
+    <None Remove="Assets\adbot_icon.png" />
+    <None Remove="Assets\autoreg_icon.png" />
+    <None Remove="Assets\bitsender_icon.png" />
     <None Remove="Assets\button_background.png" />
+    <None Remove="Assets\channel.png" />
+    <None Remove="Assets\chatbot_icon.png" />
     <None Remove="Assets\close.png" />
+    <None Remove="Assets\followbot_icon.png" />
+    <None Remove="Assets\followbot_icon1.png" />
+    <None Remove="Assets\help.png" />
     <None Remove="Assets\login background.png" />
     <None Remove="Assets\login_background.png" />
     <None Remove="Assets\logo.png" />
     <None Remove="Assets\maximize.png" />
+    <None Remove="Assets\menu_background.png" />
+    <None Remove="Assets\menu_button.png" />
     <None Remove="Assets\roll.png" />
+    <None Remove="Assets\subbot_icon.png" />
     <None Remove="Assets\switch _background_off.png" />
     <None Remove="Assets\switch _background_on.png" />
     <None Remove="Assets\switch _circle_off.png" />
     <None Remove="Assets\switch _circle_on.png" />
+    <None Remove="Assets\tokencheck_icon.png" />
+    <None Remove="Assets\update.png" />
+    <None Remove="Assets\viewersbot_icon.png" />
     <None Remove="Fonts\ofont.ru_Montserrat.ttf" />
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="Assets\acctotoken_icon.png" />
+    <Resource Include="Assets\adbot_icon.png" />
+    <Resource Include="Assets\autoreg_icon.png" />
+    <Resource Include="Assets\bitsender_icon.png" />
     <Resource Include="Assets\button_background.png" />
+    <Resource Include="Assets\channel.png" />
+    <Resource Include="Assets\chatbot_icon.png" />
     <Resource Include="Assets\close.png" />
+    <Resource Include="Assets\followbot_icon.png" />
+    <Resource Include="Assets\help.png" />
     <Resource Include="Assets\login_background.png" />
     <Resource Include="Assets\logo.png" />
     <Resource Include="Assets\maximize.png" />
+    <Resource Include="Assets\menu_background.png" />
+    <Resource Include="Assets\menu_button.png" />
     <Resource Include="Assets\roll.png" />
+    <Resource Include="Assets\subbot_icon.png" />
     <Resource Include="Assets\switch _background_off.png" />
     <Resource Include="Assets\switch _background_on.png" />
     <Resource Include="Assets\switch _circle_off.png" />
     <Resource Include="Assets\switch _circle_on.png" />
+    <Resource Include="Assets\tokencheck_icon.png" />
+    <Resource Include="Assets\update.png" />
+    <Resource Include="Assets\viewersbot_icon.png" />
     <Resource Include="Fonts\ofont.ru_Montserrat.ttf" />
   </ItemGroup>
 
