@@ -61,16 +61,7 @@
                             <ColumnDefinition Width="6*"/>
                             <ColumnDefinition Width="3*"/>
                         </Grid.ColumnDefinitions>
-                        <ToggleButton Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" x:Name="SaveKey">
-                            <ToggleButton.Template>
-                                <ControlTemplate TargetType="ToggleButton">
-                                    <Grid Background="{TemplateBinding Background}">
-                                        <ContentPresenter />
-                                    </Grid>
-                                </ControlTemplate>
-                            </ToggleButton.Template>
-
-                        </ToggleButton>
+                        <ToggleButton Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" x:Name="SaveKey"/>
                         <Viewbox Grid.Column="1" HorizontalAlignment="Left" Margin="5,0,0,0">
                             <Label Content="Save Key" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#7981d4" VerticalAlignment="Bottom" Margin="4"/>
                         </Viewbox>

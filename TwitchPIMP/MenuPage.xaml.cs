@@ -22,10 +22,21 @@ namespace TwitchPIMP
     /// </summary>
     public partial class MenuPage : Page
     {
+        private static readonly Dictionary<string, Page> pages = new()
+        {
+            {"viewersbot", new ViewersBotPage() },
+            {"chatbot", new ChatBotPage() },
+            {"followbot", new ChatBotPage() },
+            {"tokencheck", new ChatBotPage() },
+            {"acctotoken", new ChatBotPage() },
+            {"bitsender", new ChatBotPage() },
+            {"subbot", new ChatBotPage() },
+            {"autoreg", new ChatBotPage() },
+            {"adbot", new ChatBotPage() },
+        };
         public MenuPage()
         {
             InitializeComponent();
-            //button.DataContext = login;
         }
 
         private void Button_Menu_Navigate(object sender, RoutedEventArgs e)
@@ -50,18 +61,7 @@ namespace TwitchPIMP
                 }
             }
             button.IsEnabled = false;
-            NavigationFrame.Navigate(new Uri(button.Tag switch
-            {
-                "viewersbot" => "ViewersBotPage.xaml",
-                "chatbot" => "ChatBotPage.xaml",
-                "followbot" => "ViewersBotPage.xaml",
-                "tokencheck" => "ViewersBotPage.xaml",
-                "acctotoken" => "ViewersBotPage.xaml",
-                "bitsender" => "ViewersBotPage.xaml",
-                "subbot" => "ViewersBotPage.xaml",
-                "autoreg" => "ViewersBotPage.xaml",
-                "adbot" => "ViewersBotPage.xaml",
-            }, UriKind.Relative));
+            NavigationFrame.Navigate(pages[(string)button.Tag]);
         }
         private void Hyperlink_Navigate(object sender, RequestNavigateEventArgs e)
         {
