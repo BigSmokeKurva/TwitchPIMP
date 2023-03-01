@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Leaf.xNet;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
@@ -7,11 +8,11 @@ using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows;
 using System.Windows.Controls;
 
 namespace TwitchPIMP
@@ -50,20 +51,18 @@ namespace TwitchPIMP
             [JsonPropertyName("variables")]
             public Variables variables { get; set; }
         }
-        private static GqlTwitchPostJson postJson;
-        private static CancellationTokenSource cancelTokenSource;
-        private static readonly Regex tokenRegex = new("value\":\"(.*?)\",\"signature");
+        private static string postJson;
+        private static readonly Regex tokenRegex = MyRegex();
         private static readonly Regex sigRegex = new("signature\":\"(.*?)\"");
         private static readonly Random rnd = new();
         private static readonly string[] os = { "Windows NT 6.0", "Windows NT 6.1", "Windows NT 6.2", "Windows NT 6.4", "Windows NT 10.0; Win64; x64", "Windows NT 10.0", "Windows NT 10.0; WOW64", "Windows NT 10.0; Win64; x64" };
         private static readonly string[] proxyTypes = new[] { "http", "socks4", "socks5" };
-        private static readonly List<Task> tasks = new();
+        private static readonly List<Thread> tasks = new();
         private string channel;
         private bool useProxy;
-        private int threads;
         private int _good = 0;
         private int _bad = 0;
-        private WebProxy[] _proxies = Array.Empty<WebProxy>();
+        private ProxyClient[] _proxies = Array.Empty<ProxyClient>();
         private string[] _tokens = Array.Empty<string>();
         public int Good
         {
@@ -83,7 +82,7 @@ namespace TwitchPIMP
                 OnPropertyChanged();
             }
         }
-        public WebProxy[] Proxies
+        public ProxyClient[] Proxies
         {
             get => _proxies;
             set
@@ -120,55 +119,221 @@ namespace TwitchPIMP
             return $"Mozilla/5.0 ({os[rnd.Next(0, os.Length)]}) AppleWebKit/{webkit}.0 (KHTML, like Gecko) Chrome/{version} Safari/{webkit}";
         }
 
-        private async Task Thread()
+        //private async Task ThreadOld()
+        //{
+        //    // Устарел
+        //    string res;
+        //    string token;
+        //    string sig;
+        //    string url;
+        //    WebProxy proxy = new();
+        //    WebProxy tempProxy;
+        //    HttpClientHandler handler = new() { UseCookies = false, UseProxy = useProxy, Proxy = proxy };
+        //    HttpClient client = new(handler)
+        //    {
+        //        Timeout = TimeSpan.FromSeconds(5)
+        //    };
+        //    client.DefaultRequestHeaders.Accept.Add(new("*/*"));
+        //    client.DefaultRequestHeaders.AcceptLanguage.Add(new("en-US"));
+        //    client.DefaultRequestHeaders.Referrer = new($"https://www.twitch.tv/{channel}");
+        //    while (!cancelTokenSource.Token.IsCancellationRequested)
+        //    {
+        //        client.DefaultRequestHeaders.UserAgent.Clear();
+        //        if (useProxy)
+        //        {
+        //            tempProxy = Proxies[rnd.Next(0, Proxies.Length)];
+        //            proxy.Address = tempProxy.Address;
+        //            proxy.Credentials = tempProxy.Credentials;
+        //        }
+        //        client.DefaultRequestHeaders.UserAgent.ParseAdd(GetUserAgent());
+        //        client.DefaultRequestHeaders.Authorization = new("OAuth", Tokens[rnd.Next(0, Tokens.Length)]);
+        //        try
+        //        {
+        //            res = await (await client.PostAsJsonAsync("https://gql.twitch.tv/gql", postJson, cancelTokenSource.Token)).Content.ReadAsStringAsync();
+        //            token = tokenRegex.Match(res).Groups[1].Value.Replace("\\", string.Empty);
+        //            sig = sigRegex.Match(res).Groups[1].Value;
+        //            res = await client.GetStringAsync($"https://usher.ttvnw.net/api/channel/hls/{channel}.m3u8?sig={sig}&token={token}", cancelTokenSource.Token);
+        //            url = res[res.IndexOf("https://")..].Trim();
+        //            await client.SendAsync(new(HttpMethod.Head, url), cancelTokenSource.Token);
+        //            Good++;
+        //        }
+        //        catch (TaskCanceledException) { }
+        //        catch
+        //        {
+        //            Bad++;
+        //        }
+
+        //    }
+        //}
+        //private async Task Thread1()
+        //{
+        //    string res;
+        //    string token;
+        //    string sig;
+        //    string url;
+        //    HttpWebRequest request;
+        //    WebHeaderCollection headers;
+        //    StreamWriter streamWriter;
+        //    StreamReader streamReader;
+        //    await Task.Delay(5);
+        //    while (!cancelTokenSource.Token.IsCancellationRequested)
+        //    {
+        //        headers = new()
+        //        {
+        //            { "Accept", "*/*" },
+        //            {"Accept-Language", "en-US" },
+        //            {"Referer",  $"https://www.twitch.tv/{channel}"},
+        //            {"User-Agent", GetUserAgent() },
+        //            {"Authorization", $"OAuth {Tokens[rnd.Next(0, Tokens.Length)]}" },
+        //            //{"content-type", "application/json; charset=UTF-8" },
+        //            {"Sec-Fetch-Mode", "cors" },
+        //            {"X-Requested-With", "XMLHttpRequest" }
+        //        };
+
+        //        try
+        //        {
+        //            request = HttpWebRequest.CreateHttp("https://gql.twitch.tv/gql");
+        //            request.Method = "POST";
+        //            request.Headers = headers;
+        //            streamWriter = new StreamWriter(await request.GetRequestStreamAsync());
+        //            await streamWriter.WriteAsync(postJson);
+        //            streamWriter.Close();
+        //            streamReader = new StreamReader((await request.GetResponseAsync()).GetResponseStream());
+        //            res = await streamReader.ReadToEndAsync(cancelTokenSource.Token);
+        //            token = tokenRegex.Match(res).Groups[1].Value.Replace("\\", string.Empty);
+        //            sig = sigRegex.Match(res).Groups[1].Value;
+        //            request = HttpWebRequest.CreateHttp($"https://usher.ttvnw.net/api/channel/hls/{channel}.m3u8?sig={sig}&token={token}");
+        //            request.Headers = headers;
+        //            request.Method = "GET";
+        //            streamReader = new StreamReader((await request.GetResponseAsync()).GetResponseStream());
+        //            res = await streamReader.ReadToEndAsync(cancelTokenSource.Token);
+        //            url = res[res.IndexOf("https://")..].Trim();
+        //            request = HttpWebRequest.CreateHttp(url);
+        //            request.Headers = headers;
+        //            request.Method = "HEAD";
+        //            await request.GetResponseAsync();
+        //            Good++;
+        //        }
+        //        catch (TaskCanceledException) { }
+        //        catch
+        //        {
+        //            Bad++;
+        //        }
+        //    }
+        //}
+        //private void ThreadProxy1()
+        //{
+        //    string res;
+        //    string token;
+        //    string sig;
+        //    string url;
+        //    HttpWebRequest request;
+        //    WebHeaderCollection headers;
+        //    StreamWriter streamWriter;
+        //    StreamReader streamReader;
+        //    WebProxy proxy;
+        //    while (!cancelTokenSource.Token.IsCancellationRequested)
+        //    {
+        //        headers = new()
+        //        {
+        //            { "Accept", "*/*" },
+        //            {"Accept-Language", "en-US" },
+        //            {"Referer",  $"https://www.twitch.tv/{channel}"},
+        //            {"User-Agent", GetUserAgent() },
+        //            {"Authorization", $"OAuth {Tokens[rnd.Next(0, Tokens.Length)]}" },
+        //            //{"content-type", "application/json; charset=UTF-8" },
+        //            {"Sec-Fetch-Mode", "cors" },
+        //            {"X-Requested-With", "XMLHttpRequest" }
+        //        };
+        //        proxy = Proxies[rnd.Next(0, Proxies.Length)];
+        //        try
+        //        {
+        //            request = HttpWebRequest.CreateHttp("https://gql.twitch.tv/gql");
+        //            request.Timeout = 5000;
+        //            request.Method = "POST";
+        //            request.Proxy = proxy;
+        //            request.Headers = headers;
+        //            streamWriter = new StreamWriter(request.GetRequestStream());
+        //            streamWriter.Write(postJson);
+        //            streamWriter.Close();
+        //            streamReader = new StreamReader((request.GetResponse()).GetResponseStream());
+        //            res = streamReader.ReadToEnd();
+        //            token = tokenRegex.Match(res).Groups[1].Value.Replace("\\", string.Empty);
+        //            sig = sigRegex.Match(res).Groups[1].Value;
+        //            request = HttpWebRequest.CreateHttp($"https://usher.ttvnw.net/api/channel/hls/{channel}.m3u8?sig={sig}&token={token}");
+        //            request.Timeout = 5000;
+        //            request.Headers = headers;
+        //            request.Method = "GET";
+        //            request.Proxy = proxy;
+        //            streamReader = new StreamReader((request.GetResponse()).GetResponseStream());
+        //            res = streamReader.ReadToEnd();
+        //            url = res[res.IndexOf("https://")..].Trim();
+        //            request = HttpWebRequest.CreateHttp(url);
+        //            request.Timeout = 5000;
+        //            request.Headers = headers;
+        //            request.Method = "HEAD";
+        //            request.Proxy = proxy;
+        //            request.GetResponse();
+        //            Good++;
+        //        }
+        //        catch (TaskCanceledException) { }
+        //        catch (Exception ex)
+        //        {
+        //            Console.WriteLine(   ex);
+        //            Bad++;
+        //        }
+        //    }
+
+        //}
+        private void ThreadBot()
         {
             string res;
             string token;
             string sig;
             string url;
-            WebProxy proxy = new();
-            WebProxy tempProxy;
-            HttpClientHandler handler = new() { UseCookies = false, UseProxy = useProxy, Proxy = proxy };
-            HttpClient client = new(handler);
-            client.DefaultRequestHeaders.Accept.Add(new("*/*"));
-            client.DefaultRequestHeaders.AcceptLanguage.Add(new("en-US"));
-            client.DefaultRequestHeaders.Referrer = new($"https://www.twitch.tv/{channel}");
-            while (!cancelTokenSource.Token.IsCancellationRequested)
+            using HttpRequest httpRequest = new();
+            httpRequest.EnableEncodingContent = false;
+            httpRequest.UseCookies = false;
+            httpRequest.AddHeader(HttpHeader.Accept, "*/*");
+            httpRequest.AddHeader(HttpHeader.AcceptLanguage, "en-us");
+            httpRequest.AddHeader(HttpHeader.ContentType, "application/json; charset=UTF-8");
+            httpRequest.AddHeader(HttpHeader.Referer, "https://www.twitch.tv/" + channel);
+            httpRequest.AddHeader("Sec-Fetch-Mode", "cors");
+            httpRequest.AddHeader("X-Requested-With", "XMLHttpRequest");
+            httpRequest.ConnectTimeout = 5000;
+            httpRequest.KeepAliveTimeout = 5000;
+            try
             {
-                client.DefaultRequestHeaders.UserAgent.Clear();
-                if (useProxy)
+                while (true)
                 {
-                    tempProxy = Proxies[rnd.Next(0, Proxies.Length)];
-                    proxy.Address = tempProxy.Address;
-                    proxy.Credentials = tempProxy.Credentials;
+                    httpRequest["User-Agent"] = GetUserAgent();
+                    httpRequest["Authorization"] = $"OAuth {Tokens[rnd.Next(0, Tokens.Length)]}";
+                    httpRequest.Proxy = useProxy ? Proxies[rnd.Next(0, Proxies.Length)] : null;
+                    try
+                    {
+                        res = httpRequest.Post("https://gql.twitch.tv/gql", postJson, "application/json").ToString();
+                        token = tokenRegex.Match(res).Groups[1].Value.Replace("\\", string.Empty);
+                        sig = sigRegex.Match(res).Groups[1].Value;
+                        res = httpRequest.Get($"https://usher.ttvnw.net/api/channel/hls/{channel}.m3u8?sig={sig}&token={token}").ToString();
+                        url = res[res.IndexOf("https://")..].Trim();
+                        httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url);
+                        Good++;
+                    }
+                    catch (ThreadInterruptedException) { return; }
+                    catch
+                    {
+                        Bad++;
+                    }
                 }
-                client.DefaultRequestHeaders.UserAgent.ParseAdd(GetUserAgent());
-                client.DefaultRequestHeaders.Authorization = new("OAuth", Tokens[rnd.Next(0, Tokens.Length)]);
-                try
-                {
-                    res = await (await client.PostAsJsonAsync("https://gql.twitch.tv/gql", postJson, cancelTokenSource.Token)).Content.ReadAsStringAsync();
-                    //await Console.Out.WriteLineAsync(res);
-                    token = tokenRegex.Match(res).Groups[1].Value.Replace("\\", string.Empty);
-                    sig = sigRegex.Match(res).Groups[1].Value;
-                    res = await client.GetStringAsync($"https://usher.ttvnw.net/api/channel/hls/{channel}.m3u8?sig={sig}&token={token}", cancelTokenSource.Token);
-                    url = res[res.IndexOf("https://")..].Trim();
-                    await Console.Out.WriteLineAsync(url);
-                    await client.SendAsync(new(HttpMethod.Head, url), cancelTokenSource.Token);
-                    Good++;
-                }
-                catch (TaskCanceledException) { }
-                catch
-                {
-                    Bad++;
-                }
-
             }
+            catch (ThreadInterruptedException) { return; }
         }
         private void Button_Start(object sender, System.Windows.RoutedEventArgs e)
         {
             Button btn = (Button)sender;
             string nickname;
             string threads;
+            Thread thread;
             if ((string)btn.Tag == "start")
             {
                 nickname = Nickname.Text.Trim();
@@ -176,53 +341,129 @@ namespace TwitchPIMP
                 useProxy = (bool)UseProxy.IsChecked;
                 if (string.IsNullOrEmpty(nickname) || string.IsNullOrWhiteSpace(nickname) || nickname.Contains('\n') || nickname.Contains('\t') || nickname.Contains("  ") ||
                     string.IsNullOrEmpty(threads) || string.IsNullOrWhiteSpace(threads) || threads.Contains('\n') || threads.Contains('\t') || threads.Contains("  ") || !int.TryParse(threads, out int threadsInt) ||
-                    (useProxy && Proxies.Length == 0) || Tokens.Length == 0)
-                {
+                    (useProxy && !Proxies.Any()) || !Tokens.Any())
                     return;
-                }
-                cancelTokenSource = new();
                 this.channel = nickname;
-                this.threads = threadsInt;
-                postJson = new GqlTwitchPostJson()
+                postJson = JsonSerializer.Serialize(new GqlTwitchPostJson()
                 {
                     operationName = "PlaybackAccessToken_Template",
                     query = "query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}",
                     variables = new()
+                    {
+                        isLive = true,
+                        login = channel,
+                        isVod = false,
+                        vodID = string.Empty,
+                        playerType = "site"
+                    }
+                });
+                for (int i = 0; i < threadsInt; i++)
                 {
-                    isLive = true,
-                    login = channel,
-                    isVod = false,
-                    vodID = string.Empty,
-                    playerType = "site"
+                    thread = new(ThreadBot);
+                    thread.Start();
+                    tasks.Add(thread);
                 }
-                };
-                for(int i =0; i<threadsInt; i++)
-                {
-                    tasks.Add(this.Thread());
-                }
-                Task.WhenAll(tasks);
                 btn.Tag = "stop";
                 StartBtn.Content = "Stop";
             }
-            else if((string)btn.Tag == "stop")
+            else if ((string)btn.Tag == "stop")
             {
                 btn.Tag = "stoping";
-                cancelTokenSource.Cancel();
                 new Thread(() =>
                 {
-                    Task.WaitAll(tasks.ToArray());
-                    Dispatcher.Invoke(() => { btn.Tag = "start"; StartBtn.Content = "Start"; });
+                    foreach (var thread in tasks)
+                        thread.Interrupt();
+                    foreach (var thread in tasks)
+                        thread.Join();
+                    Bad = 0;
+                    Good = 0;
+                    tasks.Clear();
+                    Dispatcher.Invoke(() =>
+                    {
+                        btn.Tag = "start";
+                        StartBtn.Content = "Start";
+                    });
                 }).Start();
-                tasks.Clear();
             }
 
         }
+        //private void Button_Upload_Proxies(object sender, System.Windows.RoutedEventArgs e)
+        //{
+        //    // HTTP or any: 188.130.143.204:5500@31254134:ProxySoxybot or 188.130.143.204:5500
+        //    // Auto: http://188.130.143.204:5500@31254134:ProxySoxybot or http://188.130.143.204:5500
+
+        //    List<WebProxy> proxies = new();
+        //    string proxyType = ProxyType.Text;
+        //    string filepath;
+        //    bool? result;
+        //    var dialog = new Microsoft.Win32.OpenFileDialog
+        //    {
+        //        FileName = "Document",
+        //        DefaultExt = ".txt",
+        //        Filter = "Text documents (.txt)|*.txt"
+        //    };
+        //    result = dialog.ShowDialog();
+        //    if (result is null || !(bool)result) return;
+
+        //    filepath = dialog.FileName;
+        //    if (proxyType != "auto")
+        //        foreach (var line in File.ReadAllLines(filepath)
+        //                                .Select(x => x.Trim())
+        //                                .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y)))))
+        //        {
+        //            try
+        //            {
+        //                if (line.Contains('@') && line.Count(x => x == ':') == 2)
+        //                    proxies.Add(new WebProxy
+        //                    {
+        //                        Address = new($"{proxyType}://{line.Split('@')[0]}"),
+        //                        Credentials = new NetworkCredential()
+        //                        {
+        //                            UserName = line.Split('@')[1].Split(':')[0],
+        //                            Password = line.Split('@')[1].Split(':')[1],
+        //                        }
+        //                    });
+        //                else if (line.Count(x => x == ':') == 1)
+        //                    proxies.Add(new WebProxy
+        //                    {
+        //                        Address = new($"{proxyType}://{line}"),
+        //                    });
+        //            }
+        //            catch { }
+        //        }
+        //    else if (proxyType == "auto")
+        //        foreach (var line in File.ReadAllLines(filepath)
+        //                .Select(x => x.Trim())
+        //                .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y))))
+        //        {
+        //            try
+        //            {
+        //                if (line.Contains('@') && line.Count(x => x == ':') == 2)
+        //                    proxies.Add(new WebProxy
+        //                    {
+        //                        Address = new(line.Split('@')[0]),
+        //                        Credentials = new NetworkCredential()
+        //                        {
+        //                            UserName = line.Split('@')[1].Split(':')[0],
+        //                            Password = line.Split('@')[1].Split(':')[1],
+        //                        }
+        //                    });
+        //                else if (line.Count(x => x == ':') == 1)
+        //                    proxies.Add(new WebProxy
+        //                    {
+        //                        Address = new(line),
+        //                    });
+        //            }
+        //            catch { }
+        //        }
+        //    Proxies = proxies.ToArray();
+        //}
         private void Button_Upload_Proxies(object sender, System.Windows.RoutedEventArgs e)
         {
             // HTTP or any: 188.130.143.204:5500@31254134:ProxySoxybot or 188.130.143.204:5500
             // Auto: http://188.130.143.204:5500@31254134:ProxySoxybot or http://188.130.143.204:5500
 
-            List<WebProxy> proxies = new();
+            List<ProxyClient> proxies = new();
             string proxyType = ProxyType.Text;
             string filepath;
             bool? result;
@@ -236,53 +477,25 @@ namespace TwitchPIMP
             if (result is null || !(bool)result) return;
 
             filepath = dialog.FileName;
-            if(proxyType != "auto")
-                foreach(var line in File.ReadAllLines(filepath)
-                                        .Select(x => x.Trim())
+            if (proxyType != "auto")
+                foreach (var line in File.ReadAllLines(filepath)
+                                        .Select(x => x.Trim().Replace("@", ":"))
                                         .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y)))))
                 {
                     try
                     {
-                        if (line.Contains('@') && line.Count(x => x == ':') == 2)
-                            proxies.Add(new WebProxy
-                            {
-                                Address = new($"{proxyType}://{line.Split('@')[0]}"),
-                                Credentials = new NetworkCredential()
-                                {
-                                    UserName = line.Split('@')[1].Split(':')[0],
-                                    Password = line.Split('@')[1].Split(':')[1],
-                                }
-                            });
-                        else if (line.Count(x => x == ':') == 1)
-                            proxies.Add(new WebProxy
-                            {
-                                Address = new($"{proxyType}://{line}"),
-                            });
+                        proxies.Add(ProxyClient.Parse($"{proxyType}://{line}"));
                     }
                     catch { }
                 }
             else if (proxyType == "auto")
                 foreach (var line in File.ReadAllLines(filepath)
-                        .Select(x => x.Trim())
+                        .Select(x => x.Trim().Replace("@", ":"))
                         .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y))))
                 {
                     try
                     {
-                        if (line.Contains('@') && line.Count(x => x == ':') == 2)
-                            proxies.Add(new WebProxy
-                            {
-                                Address = new(line.Split('@')[0]),
-                                Credentials = new NetworkCredential()
-                                {
-                                    UserName = line.Split('@')[1].Split(':')[0],
-                                    Password = line.Split('@')[1].Split(':')[1],
-                                }
-                            });
-                        else if (line.Count(x => x == ':') == 1)
-                            proxies.Add(new WebProxy
-                            {
-                                Address = new(line),
-                            });
+                        proxies.Add(ProxyClient.Parse(line));
                     }
                     catch { }
                 }
@@ -311,5 +524,7 @@ namespace TwitchPIMP
                                         || x.Contains(' '))).ToArray();
         }
 
+        [GeneratedRegex("value\":\"(.*?)\",\"signature")]
+        private static partial Regex MyRegex();
     }
 }

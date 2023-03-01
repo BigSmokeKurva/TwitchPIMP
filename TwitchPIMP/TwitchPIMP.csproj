@@ -45,6 +45,14 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Leaf.xNet" Version="5.2.10" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Resource Include="Assets\acctotoken_icon.png" />
     <Resource Include="Assets\adbot_icon.png" />
     <Resource Include="Assets\autoreg_icon.png" />
