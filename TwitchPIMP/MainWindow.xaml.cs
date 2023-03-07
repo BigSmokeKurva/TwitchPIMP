@@ -40,6 +40,7 @@ namespace TwitchPIMP
                 DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
                 ref preference,
                 sizeof(uint));
+            Configuration.Parse();
             NavigationFrame.Navigate(new Uri("AuthorizationPage.xaml", UriKind.Relative));
         }
         private void WindowMoveEvent(object sender, MouseButtonEventArgs e)
@@ -82,5 +83,12 @@ namespace TwitchPIMP
             }
         }
 
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Console.WriteLine(111);
+            // TODO
+            MenuPage.UnSafeStop();
+            ViewersBotPage.UnSafeStop();
+        }
     }
 }

@@ -4,15 +4,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json;
 using System.Runtime.CompilerServices;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows.Controls;
 
 namespace TwitchPIMP
@@ -52,7 +48,7 @@ namespace TwitchPIMP
             public Variables variables { get; set; }
         }
         private static string postJson;
-        private static readonly Regex tokenRegex = MyRegex();
+        private static readonly Regex tokenRegex = new("value\":\"(.*?)\",\"signature");
         private static readonly Regex sigRegex = new("signature\":\"(.*?)\"");
         private static readonly Random rnd = new();
         private static readonly string[] os = { "Windows NT 6.0", "Windows NT 6.1", "Windows NT 6.2", "Windows NT 6.4", "Windows NT 10.0; Win64; x64", "Windows NT 10.0", "Windows NT 10.0; WOW64", "Windows NT 10.0; Win64; x64" };
@@ -111,6 +107,20 @@ namespace TwitchPIMP
         {
             DataContext = this;
             InitializeComponent();
+            postJson = JsonSerializer.Serialize(new GqlTwitchPostJson()
+            {
+                operationName = "PlaybackAccessToken_Template",
+                query = "query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}",
+                variables = new()
+                {
+                    isLive = true,
+                    login = channel,
+                    isVod = false,
+                    vodID = string.Empty,
+                    playerType = "site"
+                }
+            });
+
         }
         private static string GetUserAgent()
         {
@@ -343,20 +353,7 @@ namespace TwitchPIMP
                     string.IsNullOrEmpty(threads) || string.IsNullOrWhiteSpace(threads) || threads.Contains('\n') || threads.Contains('\t') || threads.Contains("  ") || !int.TryParse(threads, out int threadsInt) ||
                     (useProxy && !Proxies.Any()) || !Tokens.Any())
                     return;
-                this.channel = nickname;
-                postJson = JsonSerializer.Serialize(new GqlTwitchPostJson()
-                {
-                    operationName = "PlaybackAccessToken_Template",
-                    query = "query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}",
-                    variables = new()
-                    {
-                        isLive = true,
-                        login = channel,
-                        isVod = false,
-                        vodID = string.Empty,
-                        playerType = "site"
-                    }
-                });
+                channel = nickname;
                 for (int i = 0; i < threadsInt; i++)
                 {
                     thread = new(ThreadBot);
@@ -364,24 +361,24 @@ namespace TwitchPIMP
                     tasks.Add(thread);
                 }
                 btn.Tag = "stop";
-                StartBtn.Content = "Stop";
+                btn.Content = "Start";
+                //StartBtn.Content = "Stop";
             }
             else if ((string)btn.Tag == "stop")
             {
                 btn.Tag = "stoping";
                 new Thread(() =>
                 {
-                    foreach (var thread in tasks)
-                        thread.Interrupt();
-                    foreach (var thread in tasks)
-                        thread.Join();
+                    tasks.ForEach(x => x.Interrupt());
+                    tasks.ForEach(x => x.Join());
                     Bad = 0;
                     Good = 0;
                     tasks.Clear();
                     Dispatcher.Invoke(() =>
                     {
                         btn.Tag = "start";
-                        StartBtn.Content = "Start";
+                        btn.Content = "Start";
+                        //StartBtn.Content = "Start";
                     });
                 }).Start();
             }
@@ -523,8 +520,7 @@ namespace TwitchPIMP
                                         || x.Contains('\t')
                                         || x.Contains(' '))).ToArray();
         }
+        public static void UnSafeStop() => tasks.ForEach(x => x.Interrupt());
 
-        [GeneratedRegex("value\":\"(.*?)\",\"signature")]
-        private static partial Regex MyRegex();
     }
 }

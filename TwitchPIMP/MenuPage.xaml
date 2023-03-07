@@ -158,7 +158,7 @@
                             </Button.Template>
 
                         </Button>
-                        <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="30,0,0,0" Click="Button_Check_Update">
+                        <!--<Button Background="Transparent" BorderThickness="0" Padding="0" Margin="30,0,0,0" Click="Button_Check_Update">
                             <Button.Content>
                                 <Image Source="/Assets/update.png" VerticalAlignment="Center" HorizontalAlignment="Center"/>
                             </Button.Content>
@@ -169,11 +169,22 @@
                                     </Grid>
                                 </ControlTemplate>
                             </Button.Template>
-                        </Button>
+                        </Button>-->
                     </StackPanel>
                 </Viewbox>
             </Grid>
-            <Frame Grid.Row="1" Grid.Column="1" x:Name="NavigationFrame" NavigationUIVisibility="Hidden"/>
+            <Grid Grid.Column="1" Grid.Row="1">
+                <Frame x:Name="NavigationFrame" NavigationUIVisibility="Hidden"/>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="8*"/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+                    <Viewbox Grid.Row="1" HorizontalAlignment="Right" VerticalAlignment="Bottom">
+                        <Label x:Name="Timer" Content="0 days 0 hours" Foreground="#FF262629" Margin="10,5,10,5" FontFamily="{StaticResource Gugi Regular}"/>
+                    </Viewbox>
+                </Grid>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

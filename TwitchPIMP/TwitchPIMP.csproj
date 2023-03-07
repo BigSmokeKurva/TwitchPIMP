@@ -18,6 +18,7 @@
     <None Remove="Assets\button_start.png" />
     <None Remove="Assets\channel.png" />
     <None Remove="Assets\chatbot_icon.png" />
+    <None Remove="Assets\chat_bot_sender_button.png" />
     <None Remove="Assets\close.png" />
     <None Remove="Assets\combobox_togglebutton.png" />
     <None Remove="Assets\default_counter.png" />
@@ -32,6 +33,7 @@
     <None Remove="Assets\maximize.png" />
     <None Remove="Assets\menu_background.png" />
     <None Remove="Assets\menu_button.png" />
+    <None Remove="Assets\pimp_your_chat.png" />
     <None Remove="Assets\roll.png" />
     <None Remove="Assets\subbot_icon.png" />
     <None Remove="Assets\switch _background_off.png" />
@@ -41,7 +43,8 @@
     <None Remove="Assets\tokencheck_icon.png" />
     <None Remove="Assets\update.png" />
     <None Remove="Assets\viewersbot_icon.png" />
-    <None Remove="Fonts\ofont.ru_Montserrat.ttf" />
+    <None Remove="Fonts\Gugi-Regular.ttf" />
+    <None Remove="Fonts\Montserrat-SemiBold.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -50,6 +53,7 @@
 
   <ItemGroup>
     <PackageReference Include="Leaf.xNet" Version="5.2.10" />
+    <PackageReference Include="System.Management" Version="7.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -62,6 +66,7 @@
     <Resource Include="Assets\button_start.png" />
     <Resource Include="Assets\channel.png" />
     <Resource Include="Assets\chatbot_icon.png" />
+    <Resource Include="Assets\chat_bot_sender_button.png" />
     <Resource Include="Assets\close.png" />
     <Resource Include="Assets\combobox_togglebutton.png" />
     <Resource Include="Assets\default_counter.png" />
@@ -74,6 +79,7 @@
     <Resource Include="Assets\maximize.png" />
     <Resource Include="Assets\menu_background.png" />
     <Resource Include="Assets\menu_button.png" />
+    <Resource Include="Assets\pimp_your_chat.png" />
     <Resource Include="Assets\roll.png" />
     <Resource Include="Assets\subbot_icon.png" />
     <Resource Include="Assets\switch _background_off.png" />
@@ -83,7 +89,8 @@
     <Resource Include="Assets\tokencheck_icon.png" />
     <Resource Include="Assets\update.png" />
     <Resource Include="Assets\viewersbot_icon.png" />
-    <Resource Include="Fonts\ofont.ru_Montserrat.ttf" />
+    <Resource Include="Fonts\Gugi-Regular.ttf" />
+    <Resource Include="Fonts\Montserrat-SemiBold.ttf" />
   </ItemGroup>
 
 </Project>

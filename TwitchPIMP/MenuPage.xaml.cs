@@ -1,19 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Channels;
-using System.Threading.Tasks;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TwitchPIMP
 {
@@ -22,6 +13,7 @@ namespace TwitchPIMP
     /// </summary>
     public partial class MenuPage : Page
     {
+        private static Thread timerThread;
         private static readonly Dictionary<string, Page> pages = new()
         {
             {"viewersbot", new ViewersBotPage() },
@@ -34,11 +26,42 @@ namespace TwitchPIMP
             {"autoreg", new ChatBotPage() },
             {"adbot", new ChatBotPage() },
         };
-        public MenuPage()
+        public MenuPage(string time)
         {
             InitializeComponent();
+            timerThread = new(() => TimerThread(TimeSpan.Parse(time + ":00")));
+            timerThread.Start();
         }
-
+        private void TimerThread(TimeSpan time)
+        {
+            int sleepMinutes;
+            Dispatcher.Invoke(() =>
+            {
+                Timer.Content = $"{time.Days} days {time.Hours} hours";
+            });
+            try
+            {
+                sleepMinutes = time.Minutes * 1000;
+                //Thread.Sleep(sleepMinutes * 60);
+                time -= TimeSpan.FromMinutes(sleepMinutes / 1000);
+                Dispatcher.Invoke(() =>
+                {
+                    Timer.Content = $"{time.Days} days {time.Hours} hours";
+                });
+                while (((int)time.TotalMinutes / 60) > 0)
+                {
+                    //Thread.Sleep(3600000);
+                    time -= TimeSpan.FromMinutes(60);
+                    Dispatcher.Invoke(() =>
+                    {
+                        Timer.Content = $"{time.Days} days {time.Hours} hours";
+                    });
+                }
+                new Thread(() => MessageBox.Show("Your license has expired! To continue using the program, you must purchase/renew a license.", "License expired!")).Start();
+                Dispatcher.Invoke(() => { Application.Current.MainWindow.Close(); });
+            }
+            catch (ThreadInterruptedException) { return; }
+        }
         private void Button_Menu_Navigate(object sender, RoutedEventArgs e)
         {
             // viewersbot
@@ -69,9 +92,7 @@ namespace TwitchPIMP
             e.Handled = true;
         }
 
-        private void Button_Check_Update(object sender, RoutedEventArgs e)
-        {
-            //TODO
-        }
+        public static void UnSafeStop() => timerThread.Interrupt();
+
     }
 }

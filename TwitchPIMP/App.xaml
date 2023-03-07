@@ -4,39 +4,33 @@
              xmlns:local="clr-namespace:TwitchPIMP"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
-        <FontFamily x:Key="Montserrat SemiBold">./Fonts/ofont.ru_Montserrat.ttf#Montserrat SemiBold</FontFamily>
+        <FontFamily x:Key="Montserrat SemiBold">./Fonts/Montserrat-SemiBold.ttf#Montserrat SemiBold</FontFamily>
+        <FontFamily x:Key="Gugi Regular">./Fonts/Gugi-Regular.ttf#Gugi</FontFamily>
         <Style x:Key="SwitchStyle" TargetType="ToggleButton">
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="ToggleButton">
                         <Grid Background="{TemplateBinding Background}">
-                            <ContentPresenter />
-                        </Grid>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-            <Style.Triggers>
-                <Trigger Property="IsChecked" Value="True">
-                    <Setter Property="Content">
-                        <Setter.Value>
-                            <Grid>
+                            <Grid x:Name="StateOn" Visibility="Hidden">
                                 <Image Source="/Assets/switch _background_on.png" Margin="0,4,0,4"/>
                                 <Image Source="/Assets/switch _circle_on.png" HorizontalAlignment="Right" Margin="0"/>
                             </Grid>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-                <Trigger Property="IsChecked" Value="False">
-                    <Setter Property="Content">
-                        <Setter.Value>
-                            <Grid>
+                            <Grid x:Name="StateOff" Visibility="Hidden">
                                 <Image Source="/Assets/switch _background_off.png" Margin="0,4,0,4"/>
                                 <Image Source="/Assets/switch _circle_off.png" HorizontalAlignment="Left" Margin="0"/>
                             </Grid>
-                        </Setter.Value>
-                    </Setter>
-                </Trigger>
-            </Style.Triggers>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="StateOn" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="False">
+                                <Setter TargetName="StateOff" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
         <Style x:Key="MenuButton" TargetType="Button">
             <Setter Property="BorderThickness" Value="0"/>
@@ -127,5 +121,100 @@
             </Setter>
 
         </Style>
+        <Style x:Key="StartButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Grid>
+                                <Image Source="/Assets/button_start.png" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill"/>
+                                <Label Content="{TemplateBinding Content}" FontSize="35" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </Grid>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="ButtonUpload" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid Background="{TemplateBinding Background}">
+                            <Image Source="/Assets/folder_upload.png"/>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Style x:Key="SenderComboBox" TargetType="ComboBox">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ComboBox">
+                        <Grid>
+                            <ToggleButton Background="Transparent" Grid.Column="2" Focusable="false" IsChecked="{Binding Path=IsDropDownOpen,Mode=TwoWay,RelativeSource={RelativeSource TemplatedParent}}" >
+                                <ToggleButton.Template>
+                                    <ControlTemplate>
+                                        <Grid>
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="4*" />
+                                                <ColumnDefinition Width="*" />
+                                            </Grid.ColumnDefinitions>
+                                            <Border x:Name="Border"  Grid.ColumnSpan="2" CornerRadius="3" Background="Transparent" BorderBrush="#25FFFFFF" BorderThickness="0.5" />
+                                            <Border Grid.Column="0" CornerRadius="3,0,0,3"  Margin="0"  Background="#0DFFFFFF"  BorderBrush="#25FFFFFF" BorderThickness="0,0,0,0" />
+                                            <Border Background="#0DFFFFFF" Grid.Column="1" HorizontalAlignment="Left" CornerRadius="0,3,3,0">
+                                                <Viewbox>
+                                                    <Image Source="/Assets/combobox_togglebutton.png" Margin="15,30,15,30"/>
+                                                </Viewbox>
+                                            </Border>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </ToggleButton.Template>
+                            </ToggleButton>
+                            <Grid>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="5*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                <ContentPresenter Name="ContentSite" IsHitTestVisible="False"  Content="{TemplateBinding SelectionBoxItem}" ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}" ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}" Margin="3" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                            </Grid>
+                            <TextBox x:Name="PART_EditableTextBox" Visibility="Hidden" IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                            <Popup Name="Popup" Placement="Bottom" IsOpen="{TemplateBinding IsDropDownOpen}" AllowsTransparency="True"  Focusable="False" PopupAnimation="Fade">
+                                <Grid  Name="DropDown" SnapsToDevicePixels="True" MinWidth="{TemplateBinding ActualWidth}" MaxWidth="{TemplateBinding ActualWidth}" MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    <Border x:Name="DropDownBorder" Background="#232430" CornerRadius="3" />
+                                    <StackPanel IsItemsHost="True" />
+                                </Grid>
+                            </Popup>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="ItemContainerStyle">
+                <Setter.Value>
+                    <Style TargetType="ComboBoxItem">
+                        <Setter Property="Foreground" Value="#dddddd"/>
+                        <Setter Property="BorderThickness" Value="0"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ComboBoxItem">
+                                    <Border Name="Border" Background="Transparent">
+                                        <ContentPresenter HorizontalAlignment="Center"/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                                        </Trigger>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Border" Property="Background" Value="#FF303241"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </Setter.Value>
+            </Setter>
+
+        </Style>
+
     </Application.Resources>
 </Application>

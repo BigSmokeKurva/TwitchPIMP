@@ -5,7 +5,7 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:TwitchPIMP"
       mc:Ignorable="d" 
-      d:DesignHeight="450" d:DesignWidth="800"
+      d:DesignHeight="600" d:DesignWidth="1000"
       Title="ViewersBotPage" Background="Transparent">
 
     <Grid>
@@ -57,7 +57,7 @@
                         <Label Content="Proxy type" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,8,0,0"/>
                     </Viewbox>
                     <StackPanel Orientation="Horizontal" Grid.Row="5" HorizontalAlignment="Center">
-                        <Viewbox Grid.Row="5" HorizontalAlignment="Center">
+                        <Viewbox HorizontalAlignment="Center">
                             <ComboBox x:Name="ProxyType" HorizontalContentAlignment="Center" MinWidth="82" MaxWidth="82" Margin="24,3,0,0" Style="{StaticResource ProxyComboBox}" SelectedIndex="0" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="20" FontSize="9">
                                 <ComboBoxItem Content="http"/>
                                 <ComboBoxItem Content="socks5"/>
@@ -66,18 +66,7 @@
                             </ComboBox>
                         </Viewbox>
                         <Viewbox>
-                            <Button Background="Transparent" Margin="26,29,0,10" BorderThickness="0" Padding="0" Click="Button_Upload_Proxies">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Grid Background="{TemplateBinding Background}">
-                                            <ContentPresenter />
-                                        </Grid>
-                                    </ControlTemplate>
-                                </Button.Template>
-                                <Button.Content>
-                                    <Image Source="/Assets/folder_upload.png"/>
-                                </Button.Content>
-                            </Button>
+                            <Button Background="Transparent" Margin="26,29,0,10" BorderThickness="0" Padding="0" Click="Button_Upload_Proxies" Style="{StaticResource ButtonUpload}"/>
                         </Viewbox>
                     </StackPanel>
                     <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-10,0,10">
@@ -85,40 +74,13 @@
                             <Label Content="Tokens" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="40" MaxHeight="40" MinWidth="75" MaxWidth="75" FontSize="16" Foreground="#ffffff" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="71,20,35,8"/>
                         </Viewbox>
                         <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button Background="Transparent" Margin="0,20,0,10" MaxHeight="19" BorderThickness="0"  Padding="0" Click="Button_Upload_Tokens">
-                                <Button.Template>
-                                    <ControlTemplate TargetType="Button">
-                                        <Grid Background="{TemplateBinding Background}">
-                                            <ContentPresenter />
-                                        </Grid>
-                                    </ControlTemplate>
-                                </Button.Template>
-
-                                <Button.Content>
-                                    <Image Source="/Assets/folder_upload.png"/>
-                                </Button.Content>
-                            </Button>
+                            <Button Background="Transparent" Margin="0,20,0,10" MaxHeight="19" BorderThickness="0"  Padding="0" Click="Button_Upload_Tokens" Style="{StaticResource ButtonUpload}"/>
                         </Viewbox>
                     </StackPanel>
                 </Grid>
             </Border>
             <Viewbox Grid.Row="1">
-                <Button BorderThickness="0" Background="Transparent" Margin="0,70,0,370" Tag="start" Click="Button_Start">
-                    <Button.Template>
-                        <ControlTemplate TargetType="Button">
-                            <Grid Background="{TemplateBinding Background}">
-                                <ContentPresenter />
-                            </Grid>
-                        </ControlTemplate>
-                    </Button.Template>
-                    <Button.Content>
-                        <Grid>
-                            <Image Source="/Assets/button_start.png" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill"/>
-                            <Label Content="Start" x:Name="StartBtn" FontSize="35" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
-                        </Grid>
-                    </Button.Content>
-                </Button>
-
+                <Button BorderThickness="0" Content="Start" Background="Transparent" Margin="0,70,0,370" Tag="start" Click="Button_Start" Style="{StaticResource StartButton}"/>
             </Viewbox>
         </Grid>
         <Grid Grid.Column="1">

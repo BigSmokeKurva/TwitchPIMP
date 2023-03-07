@@ -1,19 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Globalization;
-using System.Linq;
+using System.Management;
+using System.Net.Sockets;
 using System.Text;
-using System.Threading.Tasks;
+using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TwitchPIMP
 {
@@ -22,14 +16,82 @@ namespace TwitchPIMP
     /// </summary>
     public partial class AuthorizationPage : Page
     {
+        private class ResponseJson
+        {
+            public struct ConfigSoftJson
+            {
+                [JsonPropertyName("version")]
+                public string version { get; set; }
+
+                [JsonPropertyName("invalid_version_msg")]
+                public string invalid_version_msg { get; set; }
+
+                [JsonPropertyName("hi_msg")]
+                public string hi_msg { get; set; }
+            }
+
+            [JsonPropertyName("response")]
+            public string response { get; set; }
+
+            [JsonPropertyName("key")]
+            public string key { get; set; }
+
+            [JsonPropertyName("license_date")]
+            public string license_date { get; set; }
+
+            [JsonPropertyName("license_time_left")]
+            public string license_time_left { get; set; }
+
+            [JsonPropertyName("is_active")]
+            public bool is_active { get; set; }
+
+            [JsonPropertyName("config")]
+            public ConfigSoftJson config { get; set; }
+        }
+
         public AuthorizationPage()
         {
             InitializeComponent();
+            KeyTextBox.Text = Configuration.authorization.key;
+            if (Configuration.authorization.key.Length != 0)
+                SaveKey.IsChecked = true;
+            //#if DEBUG
+            //((Frame)Application.Current.MainWindow.FindName("NavigationFrame")).Navigate(new Uri("MenuPage.xaml", UriKind.Relative));
+            //#endif
+
         }
         private void Hyperlink_Navigate(object sender, RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
             e.Handled = true;
+        }
+        private static string GetHWID()
+        {
+            var mbs = new ManagementObjectSearcher("Select ProcessorId From Win32_processor");
+            ManagementObjectCollection mbsList = mbs.Get();
+            string id = "";
+            foreach (ManagementObject mo in mbsList)
+            {
+                id = mo["ProcessorId"].ToString();
+                break;
+            }
+            return id;
+        }
+        private static string Authorization(string licenseKey)
+        {
+            byte[] data;
+            NetworkStream stream;
+            int bytes;
+            using TcpClient tcpClient = new();
+            tcpClient.ReceiveTimeout = 5000;
+            tcpClient.SendTimeout = 5000;
+            tcpClient.Connect(Configuration.ip, Configuration.port);
+            data = Encoding.UTF8.GetBytes($"CheckLicense_{licenseKey}_{GetHWID()}");
+            stream = tcpClient.GetStream();
+            stream.Write(data, 0, data.Length);
+            data = new byte[512];
+            bytes = stream.Read(data, 0, data.Length);
+            return Encoding.UTF8.GetString(data, 0, bytes); ;
         }
 
         private void Button_Sign_In(object sender, RoutedEventArgs e)
@@ -37,14 +99,62 @@ namespace TwitchPIMP
             // TODO
             bool saveKey = (bool)SaveKey.IsChecked;
             string key = KeyTextBox.Text.Trim();
+            ResponseJson response;
             ErrorLabel.Content = string.Empty;
+
             if (string.IsNullOrEmpty(key) || string.IsNullOrWhiteSpace(key))
             {
                 ErrorLabel.Content = "Enter the key!";
                 KeyTextBox.Text = string.Empty;
                 return;
             }
-            ((Frame)Application.Current.MainWindow.FindName("NavigationFrame")).Navigate(new Uri("MenuPage.xaml", UriKind.Relative));
+            try
+            {
+                // Проверка ключа, обновлений
+                response = System.Text.Json.JsonSerializer.Deserialize<ResponseJson>(Authorization(key));
+                if (!response.is_active)
+                {
+                    if (response.response == "Hardware binding error!")
+                    {
+                        ErrorLabel.Content = "Hardware binding error!";
+                        KeyTextBox.Text = string.Empty;
+                    }
+                    else if (response.response == "There is no such key!")
+                    {
+                        ErrorLabel.Content = "There is no such key!";
+                        KeyTextBox.Text = string.Empty;
+                    }
+                    else
+                    {
+                        ErrorLabel.Content = "License expired!";
+                        KeyTextBox.Text = string.Empty;
+                    }
+                    return;
+                }
+                if (Configuration.version != response.config.version)
+                {
+                    if (MessageBox.Show("Your version is out of date! Do you want to upgrade?", "Update", MessageBoxButton.YesNo) == MessageBoxResult.Yes)
+                    {
+                        Process.Start(new ProcessStartInfo(response.config.invalid_version_msg) { UseShellExecute = true });
+                    }
+                }
+                if (saveKey)
+                {
+                    Configuration.authorization.key = key;
+                    Configuration.Save();
+                }
+                else
+                {
+                    Configuration.authorization.key = string.Empty;
+                    Configuration.Save();
+                    Configuration.authorization.key = key;
+                }
+                ((Frame)Application.Current.MainWindow.FindName("NavigationFrame")).Navigate(new MenuPage(response.license_time_left));
+            }
+            catch
+            {
+                ErrorLabel.Content = "Authorization server error!";
+            }
         }
 
         private void TextBox_Key_KeyDown(object sender, KeyEventArgs e)
