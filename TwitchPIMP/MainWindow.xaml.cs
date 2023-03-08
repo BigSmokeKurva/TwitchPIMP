@@ -85,10 +85,12 @@ namespace TwitchPIMP
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Console.WriteLine(111);
             // TODO
             MenuPage.UnSafeStop();
             ViewersBotPage.UnSafeStop();
+            ChatBotPage.UnSafeStop();
         }
+
+        private void NavigationFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e) => NavigationFrame.NavigationService.RemoveBackEntry();
     }
 }

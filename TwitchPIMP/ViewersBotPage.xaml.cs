@@ -9,6 +9,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace TwitchPIMP
@@ -338,7 +339,7 @@ namespace TwitchPIMP
             }
             catch (ThreadInterruptedException) { return; }
         }
-        private void Button_Start(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Start(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
             string nickname;
@@ -361,7 +362,7 @@ namespace TwitchPIMP
                     tasks.Add(thread);
                 }
                 btn.Tag = "stop";
-                btn.Content = "Start";
+                btn.Content = "Stop";
                 //StartBtn.Content = "Stop";
             }
             else if ((string)btn.Tag == "stop")
@@ -455,10 +456,11 @@ namespace TwitchPIMP
         //        }
         //    Proxies = proxies.ToArray();
         //}
-        private void Button_Upload_Proxies(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Upload_Proxies(object sender, RoutedEventArgs e)
         {
             // HTTP or any: 188.130.143.204:5500@31254134:ProxySoxybot or 188.130.143.204:5500
             // Auto: http://188.130.143.204:5500@31254134:ProxySoxybot or http://188.130.143.204:5500
+            if (tasks.Any()) return;
 
             List<ProxyClient> proxies = new();
             string proxyType = ProxyType.Text;
@@ -498,8 +500,10 @@ namespace TwitchPIMP
                 }
             Proxies = proxies.ToArray();
         }
-        private void Button_Upload_Tokens(object sender, System.Windows.RoutedEventArgs e)
+        private void Button_Upload_Tokens(object sender, RoutedEventArgs e)
         {
+            if (tasks.Any()) return;
+
             string filepath;
             bool? result;
             var dialog = new Microsoft.Win32.OpenFileDialog

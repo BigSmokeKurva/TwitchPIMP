@@ -10,7 +10,7 @@
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
     <Grid>
-        <Frame x:Name="NavigationFrame" NavigationUIVisibility="Hidden"/>
+        <Frame x:Name="NavigationFrame" NavigationUIVisibility="Hidden" Navigated="NavigationFrame_Navigated"/>
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="30"/>

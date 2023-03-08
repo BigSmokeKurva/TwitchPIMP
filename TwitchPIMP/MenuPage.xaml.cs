@@ -13,7 +13,7 @@ namespace TwitchPIMP
     /// </summary>
     public partial class MenuPage : Page
     {
-        private static Thread timerThread;
+        private static Thread timerThread = null;
         private static readonly Dictionary<string, Page> pages = new()
         {
             {"viewersbot", new ViewersBotPage() },
@@ -42,7 +42,7 @@ namespace TwitchPIMP
             try
             {
                 sleepMinutes = time.Minutes * 1000;
-                //Thread.Sleep(sleepMinutes * 60);
+                Thread.Sleep(sleepMinutes * 60);
                 time -= TimeSpan.FromMinutes(sleepMinutes / 1000);
                 Dispatcher.Invoke(() =>
                 {
@@ -50,7 +50,7 @@ namespace TwitchPIMP
                 });
                 while (((int)time.TotalMinutes / 60) > 0)
                 {
-                    //Thread.Sleep(3600000);
+                    Thread.Sleep(3600000);
                     time -= TimeSpan.FromMinutes(60);
                     Dispatcher.Invoke(() =>
                     {
@@ -92,7 +92,8 @@ namespace TwitchPIMP
             e.Handled = true;
         }
 
-        public static void UnSafeStop() => timerThread.Interrupt();
+        public static void UnSafeStop() => timerThread?.Interrupt();
 
+        private void NavigationFrame_Navigated(object sender, NavigationEventArgs e) => NavigationFrame.NavigationService.RemoveBackEntry();
     }
 }
