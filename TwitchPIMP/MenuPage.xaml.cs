@@ -18,7 +18,7 @@ namespace TwitchPIMP
         {
             {"viewersbot", new ViewersBotPage() },
             {"chatbot", new ChatBotPage() },
-            {"followbot", new ChatBotPage() },
+            {"followbot", new FollowBotPage() },
             {"tokencheck", new ChatBotPage() },
             {"acctotoken", new ChatBotPage() },
             {"bitsender", new ChatBotPage() },

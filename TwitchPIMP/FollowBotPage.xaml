@@ -1,4 +1,4 @@
-﻿<Page x:Class="TwitchPIMP.ChatBotPage"
+﻿<Page x:Class="TwitchPIMP.FollowBotPage"
       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:TwitchPIMP"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="1000"
-      Title="ChatBotPage" Background="Transparent">
+      Title="FollowBotPage" Background="Transparent">
 
     <Grid>
         <Grid.ColumnDefinitions>
@@ -15,7 +15,7 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="4*"/>
+                <RowDefinition Height="1.35*"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
@@ -25,54 +25,7 @@
                     <ColumnDefinition Width="12*"/>
                 </Grid.ColumnDefinitions>
                 <Grid Grid.Column="0">
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="3.2*"/>
-                        <RowDefinition Height="0.25*"/>
-                        <RowDefinition/>
-                    </Grid.RowDefinitions>
                     <Border Grid.Row="0" Background="#991C1C1C" CornerRadius="20">
-                        <!--<StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Top">
-                            <Viewbox HorizontalAlignment="Center">
-                                <Label Content="Nickname" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="80,7,80,0"/>
-                            </Viewbox>
-                            <Viewbox Grid.Row="1" HorizontalAlignment="Center">
-                                <TextBox x:Name="Nickname" Padding="2,1,2,2"   Background="#0DFFFFFF" Text="" HorizontalContentAlignment="Center" MinWidth="82" MaxWidth="82" MinHeight="15" FontSize="9" BorderThickness="0.5" BorderBrush="#25FFFFFF" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" Margin="40,3,40,0" VerticalContentAlignment="Center" Height="18">
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="3"/>
-                                        </Style>
-                                    </TextBox.Resources>
-                                </TextBox>
-                            </Viewbox>
-                            <Viewbox Grid.Row="2" HorizontalAlignment="Center">
-                                <Label Content="Threads" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="80,5,80,0"/>
-                            </Viewbox>
-                            <Viewbox Grid.Row="3" HorizontalAlignment="Center">
-                                <TextBox x:Name="Threads" Padding="2"  Background="#0DFFFFFF" FontSize="9" Text="" HorizontalContentAlignment="Center" BorderThickness="0.5" BorderBrush="#25FFFFFF" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" Margin="40,3,40,0" VerticalContentAlignment="Center" Height="14" Width="40">
-                                    <TextBox.Resources>
-                                        <Style TargetType="{x:Type Border}">
-                                            <Setter Property="CornerRadius" Value="3"/>
-                                        </Style>
-                                    </TextBox.Resources>
-                                </TextBox>
-                            </Viewbox>
-                            <Viewbox Grid.Row="4" HorizontalAlignment="Center">
-                                <Label Content="Proxy type" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="80,5,80,0"/>
-                            </Viewbox>
-                            <Grid>
-                                <Viewbox HorizontalAlignment="Center">
-                                    <ComboBox x:Name="ProxyType" HorizontalContentAlignment="Center" MinWidth="150" MaxWidth="150" MinHeight="30" MaxHeight="30" Margin="120,3,120,0" Style="{StaticResource ProxyComboBox}" SelectedIndex="0" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" FontSize="15">
-                                        <ComboBoxItem Content="http"/>
-                                        <ComboBoxItem Content="socks5"/>
-                                        <ComboBoxItem Content="socks4"/>
-                                        <ComboBoxItem Content="auto"/>
-                                    </ComboBox>
-                                </Viewbox>
-                                <Viewbox>
-                                    <Button Background="Transparent" Margin="160,3,20,0" Height="23" BorderThickness="0" Padding="0" Style="{StaticResource ButtonUpload}"/>
-                                </Viewbox>
-                            </Grid>
-                        </StackPanel>-->
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="0.8*"/>
@@ -133,50 +86,36 @@
                             </StackPanel>
                         </Grid>
                     </Border>
-                    <Border Grid.Row="2" Background="#991C1C1C" CornerRadius="20">
-                        <Grid>
-                            <Grid.RowDefinitions>
-                                <RowDefinition Height="0.6*"/>
-                                <RowDefinition/>
-                            </Grid.RowDefinitions>
-                            <Viewbox Grid.Row="0" HorizontalAlignment="Center">
-                                <Label Content="Advanced mode" FontSize="9" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,4,0,4"/>
-                            </Viewbox>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-10,0,10">
-                                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Label Content="Upload messages" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="60" MaxHeight="60" MinWidth="190" FontSize="25" Foreground="#FF6F6F6F" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="31,20,15,8"/>
-                                </Viewbox>
-                                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Button Background="Transparent" Margin="0,10,0,5" MaxHeight="19" BorderThickness="0"  Padding="0" Style="{StaticResource ButtonUpload}" Click="Button_Upload_Advanced_Messages"/>
-                                </Viewbox>
-                            </StackPanel>
-                        </Grid>
-                    </Border>
                 </Grid>
                 <Grid Grid.Column="2">
                     <Grid.RowDefinitions>
                         <RowDefinition Height="1.75*"/>
                         <RowDefinition Height="0.25*"/>
                         <RowDefinition Height="1.2*"/>
-                        <RowDefinition Height="0.25*"/>
-                        <RowDefinition Height="1*"/>
                     </Grid.RowDefinitions>
                     <Border Grid.Row="0" Background="#991C1C1C" CornerRadius="20">
                         <Grid>
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="0.8*"/>
                                 <RowDefinition/>
-                                <RowDefinition/>
+                                <RowDefinition Height="0.8*"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Viewbox Grid.Row="0" HorizontalAlignment="Center">
-                                <Label Content="Sender" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,8,0,1"/>
+                                <Label Content="Follow Mode" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,8,0,2"/>
                             </Viewbox>
                             <Viewbox Grid.Row="1" HorizontalAlignment="Center">
-                                <ComboBox x:Name="SenderTokens" HorizontalContentAlignment="Center" MinWidth="100" MaxWidth="100" Margin="0,3,0,1.5" Style="{StaticResource SenderComboBox}" Foreground="#dddddd" MinHeight="20" FontSize="9" MaxDropDownHeight="173.7"/>
+                                <ComboBox x:Name="FollowMode" HorizontalContentAlignment="Center" MinWidth="82" MaxWidth="82" Style="{StaticResource ProxyComboBox}" SelectedIndex="0" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="20" FontSize="9" Margin="0,0.9,0,3.4">
+                                    <ComboBoxItem Content="Follow"/>
+                                    <ComboBoxItem Content="Unfollow"/>
+                                </ComboBox>
+
                             </Viewbox>
                             <Viewbox Grid.Row="2" HorizontalAlignment="Center">
-                                <TextBox x:Name="SenderMessage" Padding="2,1,2,2" Background="#0DFFFFFF" Text="" HorizontalContentAlignment="Center" MinWidth="91" MaxWidth="91" MinHeight="20" FontSize="9" BorderThickness="0.5" BorderBrush="#25FFFFFF" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" Margin="0,7,0,0" VerticalContentAlignment="Center">
+                                <Label Content="Delay" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,2.9,0,6"/>
+                            </Viewbox>
+                            <Viewbox Grid.Row="4" HorizontalAlignment="Center">
+                                <TextBox x:Name="ActionDelay" Padding="2"  Background="#0DFFFFFF" MinHeight="20" FontSize="9" Text="" HorizontalContentAlignment="Center" MinWidth="55" MaxWidth="55" BorderThickness="0.5" BorderBrush="#25FFFFFF" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" Margin="0,-2.2,0,7.6" VerticalContentAlignment="Center">
                                     <TextBox.Resources>
                                         <Style TargetType="{x:Type Border}">
                                             <Setter Property="CornerRadius" Value="3"/>
@@ -184,54 +123,34 @@
                                     </TextBox.Resources>
                                 </TextBox>
                             </Viewbox>
-                            <Viewbox Grid.Row="3">
-                                <Button BorderThickness="0" Content="Send" Background="Transparent" Tag="start" Margin="0,8,0,8" Click="Button_Send">
-                                    <Button.Template>
-                                        <ControlTemplate TargetType="Button">
-                                            <Grid Background="{TemplateBinding Background}">
-                                                <Grid>
-                                                    <Image Source="/Assets/chat_bot_sender_button.png" VerticalAlignment="Center" HorizontalAlignment="Center" Stretch="UniformToFill"/>
-                                                    <Label Content="{TemplateBinding Content}" FontSize="20" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
-                                                </Grid>
-                                            </Grid>
-                                        </ControlTemplate>
-
-                                    </Button.Template>
-                                </Button>
-                            </Viewbox>
 
                         </Grid>
                     </Border>
                     <Border Grid.Row="2" Background="#991C1C1C" CornerRadius="20">
-                        <Viewbox>
-                            <Image Source="/Assets/pimp_your_chat.png" Margin="0,20,0,20"/>
-                        </Viewbox>
-                    </Border>
-                    <Border Grid.Row="4" Background="#991C1C1C" CornerRadius="20">
                         <Grid>
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="0.6*"/>
+                                <RowDefinition Height="0.8*"/>
                                 <RowDefinition/>
                             </Grid.RowDefinitions>
                             <Viewbox Grid.Row="0" HorizontalAlignment="Center">
-                                <Label Content="Spam mode" FontSize="9" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,4,0,4"/>
+                                <Label Content="Capsolver Api" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,10,0,6"/>
                             </Viewbox>
-                            <StackPanel Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-10,0,10">
-                                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Label Content="Upload messages" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="60" MaxHeight="60" MinWidth="190" FontSize="25" Foreground="#FF6F6F6F" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="31,20,15,8"/>
-                                </Viewbox>
-                                <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                                    <Button Background="Transparent" Margin="0,10,0,5" MaxHeight="19" BorderThickness="0"  Padding="0" Style="{StaticResource ButtonUpload}" Click="Button_Upload_Spam_Messages"/>
-                                </Viewbox>
-                            </StackPanel>
+                            <Viewbox Grid.Row="1" HorizontalAlignment="Center">
+                                <TextBox x:Name="CapsolverApi" Padding="2"  Background="#0DFFFFFF" MinHeight="20" FontSize="9" Text="" HorizontalContentAlignment="Center" MinWidth="140" MaxWidth="140" BorderThickness="0.5" BorderBrush="#25FFFFFF" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" Margin="0,3,0,10" VerticalContentAlignment="Center">
+                                    <TextBox.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="3"/>
+                                        </Style>
+                                    </TextBox.Resources>
+                                </TextBox>
+                            </Viewbox>
+
                         </Grid>
-
                     </Border>
-
                 </Grid>
             </Grid>
             <Viewbox Grid.Row="1">
-                <Button BorderThickness="0" Content="Start" Background="Transparent" Margin="0,50,0,90" Tag="start" Style="{StaticResource StartButton}" Click="Button_Start"/>
+                <Button BorderThickness="0" Content="Start" Background="Transparent" Margin="0,50,0,320" Click="Button_Start" Tag="start" Style="{StaticResource StartButton}"/>
             </Viewbox>
 
         </Grid>
@@ -280,14 +199,6 @@
                             <Image Source="/Assets/default_counter.png"/>
                             <Label Padding="0,0,5,0" Content="{Binding Path=Tokens.Length, Mode=OneWay}" MaxWidth="150" FontSize="35" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Center" Margin="0,0,0,0"/>
                         </Grid>
-                    </StackPanel>
-                </Viewbox>
-            </Border>
-            <Border Grid.Row="4" Grid.Column="1" Background="#991C1C1C" CornerRadius="15">
-                <Viewbox>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Label Content="Proxy" FontSize="40" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" Margin="0,0,0,0"/>
-                        <ToggleButton x:Name="UseProxy" Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" Margin="30,40,0,40" Padding="0,0,0,0"/>
                     </StackPanel>
                 </Viewbox>
             </Border>

@@ -158,6 +158,7 @@ namespace TwitchPIMP
                             await Task.Delay(rnd.Next(Configuration.chatbot.delay_interval_after_advanced_messages.Item1, Configuration.chatbot.delay_interval_after_advanced_messages.Item2), cancelTokenSource.Token);
                         }
                     }
+                    // Spam
                     for (int i = 0; i < rnd.Next(Configuration.chatbot.amount_spam_interval.Item1, Configuration.chatbot.amount_spam_interval.Item2); i++)
                     {
                         try
@@ -380,7 +381,7 @@ namespace TwitchPIMP
                 advancedMessages.Add(line.Split('|').Where(x => x.Length > 0).ToArray());
             }
             this.advancedMessages = advancedMessages.ToArray();
-            advancedMessagesIndexRange = Enumerable.Range(0, advancedMessages.Count);
+            advancedMessagesIndexRange = Enumerable.Range(0, advancedMessages.Count).OrderBy(item => rnd.Next());
         }
         private void Button_Upload_Spam_Messages(object sender, RoutedEventArgs e)
         {
