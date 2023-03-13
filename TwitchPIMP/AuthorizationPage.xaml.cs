@@ -1,9 +1,7 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Management;
 using System.Net.Sockets;
 using System.Text;
-using System.Text.Json.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -16,39 +14,6 @@ namespace TwitchPIMP
     /// </summary>
     public partial class AuthorizationPage : Page
     {
-        private class ResponseJson
-        {
-            public struct ConfigSoftJson
-            {
-                [JsonPropertyName("version")]
-                public string version { get; set; }
-
-                [JsonPropertyName("invalid_version_msg")]
-                public string invalid_version_msg { get; set; }
-
-                [JsonPropertyName("hi_msg")]
-                public string hi_msg { get; set; }
-            }
-
-            [JsonPropertyName("response")]
-            public string response { get; set; }
-
-            [JsonPropertyName("key")]
-            public string key { get; set; }
-
-            [JsonPropertyName("license_date")]
-            public string license_date { get; set; }
-
-            [JsonPropertyName("license_time_left")]
-            public string license_time_left { get; set; }
-
-            [JsonPropertyName("is_active")]
-            public bool is_active { get; set; }
-
-            [JsonPropertyName("config")]
-            public ConfigSoftJson config { get; set; }
-        }
-
         public AuthorizationPage()
         {
             InitializeComponent();
@@ -99,7 +64,7 @@ namespace TwitchPIMP
             // TODO
             bool saveKey = (bool)SaveKey.IsChecked;
             string key = KeyTextBox.Text.Trim();
-            ResponseJson response;
+            AuthorizationResponse response;
             ErrorLabel.Content = string.Empty;
 
             if (string.IsNullOrEmpty(key) || string.IsNullOrWhiteSpace(key))
@@ -111,7 +76,7 @@ namespace TwitchPIMP
             try
             {
                 // Проверка ключа, обновлений
-                response = System.Text.Json.JsonSerializer.Deserialize<ResponseJson>(Authorization(key));
+                response = System.Text.Json.JsonSerializer.Deserialize<AuthorizationResponse>(Authorization(key));
                 if (!response.is_active)
                 {
                     if (response.response == "Hardware binding error!")

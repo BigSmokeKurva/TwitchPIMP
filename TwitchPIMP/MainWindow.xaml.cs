@@ -90,6 +90,7 @@ namespace TwitchPIMP
             ViewersBotPage.UnSafeStop();
             ChatBotPage.UnSafeStop();
             FollowBotPage.UnSafeStop();
+            AutoregPage.UnSafeStop();
         }
 
         private void NavigationFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e) => NavigationFrame.NavigationService.RemoveBackEntry();

@@ -1,44 +1,11 @@
 ﻿using System.IO;
 using System.Text.Encodings.Web;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace TwitchPIMP
 {
     class Configuration
     {
-        public class ConfigurationJson
-        {
-            public class Authorization
-            {
-                [JsonPropertyName("key")]
-                public string key { get; set; }
-            }
-            public class Chatbot
-            {
-                [JsonPropertyName("thread_start_delay_interval")]
-                public string thread_start_delay_interval { get; set; }
-
-                [JsonPropertyName("delay_interval_after_advanced_messages")]
-                public string delay_interval_after_advanced_messages { get; set; }
-
-                [JsonPropertyName("advanced_messages_cooldown_interval")]
-                public string advanced_messages_cooldown_interval { get; set; }
-
-                [JsonPropertyName("amount_spam_interval")]
-                public string amount_spam_interval { get; set; }
-
-                [JsonPropertyName("delay_interval_after_spam_messages")]
-                public string delay_interval_after_spam_messages { get; set; }
-            }
-
-
-            [JsonPropertyName("authorization")]
-            public Authorization authorization { get; set; }
-
-            [JsonPropertyName("chatbot")]
-            public Chatbot chatbot { get; set; }
-        }
         public class Chatbot
         {
             public (int, int) thread_start_delay_interval;
@@ -57,6 +24,7 @@ namespace TwitchPIMP
         public static readonly string version = "1.6b";
         public static Chatbot chatbot;
         public static ConfigurationJson.Authorization authorization;
+        public static ConfigurationJson.Other other;
 
         public static void Parse()
         {
@@ -70,6 +38,7 @@ namespace TwitchPIMP
                 delay_interval_after_spam_messages = (int.Parse(deserializedJson.chatbot.delay_interval_after_spam_messages.Split('-')[0]) * 1000, int.Parse(deserializedJson.chatbot.delay_interval_after_spam_messages.Split('-')[1]) * 1000),
             };
             authorization = deserializedJson.authorization;
+            other = deserializedJson.other;
         }
         public static void Save()
         {
@@ -83,7 +52,8 @@ namespace TwitchPIMP
                     amount_spam_interval = $"{chatbot.amount_spam_interval.Item1}-{chatbot.amount_spam_interval.Item2}",
                     delay_interval_after_spam_messages = $"{chatbot.delay_interval_after_spam_messages.Item1 / 1000}-{chatbot.delay_interval_after_spam_messages.Item2 / 1000}",
                 },
-                authorization = authorization
+                authorization = authorization,
+                other = other
             }, optionsSerializer);
             File.WriteAllText("configuration.json", config);
         }

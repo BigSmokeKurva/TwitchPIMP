@@ -1,5 +1,4 @@
 ﻿using Leaf.xNet;
-using MoreLinq;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -16,13 +15,16 @@ using System.Windows.Controls;
 namespace TwitchPIMP
 {
     /// <summary>
-    /// Логика взаимодействия для FollowBotPage.xaml
+    /// Логика взаимодействия для AutoregPage.xaml
     /// </summary>
-    public partial class FollowBotPage : Page, INotifyPropertyChanged
+    public partial class AutoregPage : Page, INotifyPropertyChanged
     {
         private static readonly Random rnd = new();
         private static readonly string[] proxyTypes = new[] { "http", "socks4", "socks5" };
+        private static readonly char[] vowels = "aeuoyi".ToCharArray();
         private static readonly char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
+        private static readonly char[] charsPassword = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@!_-=@!_-=".ToCharArray();
+        private static readonly char[] consonants = "qwrtpsdfghjklzxcvbnmqwrtpsdfghjklzxcvbnmQWRTPSDFGHJKLZXCVBNM_".ToCharArray();
         private static readonly string[] userAgents =
         {
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0",
@@ -31,18 +33,18 @@ namespace TwitchPIMP
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
         };
+        private static readonly Regex IntegrityTokenRegex = new("token\":\"(.*?)\"");
+        private static readonly Regex accessTokenRegex = new("token\":\"(.*?)\"");
+        private static readonly Regex userIdRegex = new("rID\":\"(.*?)\"");
         private static readonly List<Thread> tasks = new();
         private static readonly string clientVersion = "3040e141-5964-4d72-b67d-e73c1cf355b";
         private static readonly string clientId = "kimne78kx3ncx6brgo4mv6wki5h1ko";
-        private static readonly Regex channelIdRegex = new("\"id\":\"(.*?)\",");
-        private static readonly Regex IntegrityTokenRegex = new("token\":\"(.*?)\",");
-        private static string postData;
         private string capsolverApi;
-        private int delay;
+        private bool confirmEmail;
         private int _good = 0;
         private int _bad = 0;
         private (ProxyClient, string)[] _proxies = Array.Empty<(ProxyClient, string)>();
-        private string[] _tokens = Array.Empty<string>();
+        private List<string> result = new();
         public int Good
         {
             get => _good;
@@ -70,15 +72,6 @@ namespace TwitchPIMP
                 OnPropertyChanged();
             }
         }
-        public string[] Tokens
-        {
-            get => _tokens;
-            set
-            {
-                _tokens = value;
-                OnPropertyChanged();
-            }
-        }
 
         #region Обработчик изменений переменных
         public event PropertyChangedEventHandler PropertyChanged;
@@ -86,55 +79,90 @@ namespace TwitchPIMP
 
         #endregion
 
-        public FollowBotPage()
+        public AutoregPage()
         {
             DataContext = this;
             InitializeComponent();
             CapsolverApi.Text = Configuration.other.capsolver_api;
         }
-        private void ThreadBot(string[] tokens)
+        private void ThreadBot()
         {
             string res;
             HttpResponse _res;
             string deviceId;
             string integrityToken;
             string userAgent;
+            string userId;
+            string code;
+            string nickname;
+            string password;
+            string accessToken;
             (ProxyClient, string) proxy;
             KasadaResponse kasada;
+            Email email = new();
             using HttpRequest httpRequest = new();
+            httpRequest.ConnectTimeout = 10000;
+            httpRequest.KeepAliveTimeout = 10000;
+            //httpRequest.IgnoreProtocolErrors = true;
             httpRequest["Accept"] = "*/*";
             httpRequest["Client-Version"] = clientVersion;
             httpRequest["Accept-Encoding"] = "deflate";
-            httpRequest["Client-Id"] = clientId; 
-            httpRequest.ConnectTimeout = 10000;
-            httpRequest.KeepAliveTimeout = 10000;
+            httpRequest["Client-Id"] = clientId;
             try
             {
-                foreach (var token in tokens)
+                while (true)
                 {
+                    //httpRequest.Cookies?.Clear();
+                    //httpRequest.ClearAllHeaders();
                     userAgent = userAgents[rnd.Next(userAgents.Length)];
                     proxy = Proxies[rnd.Next(0, Proxies.Length)];
                     httpRequest["User-Agent"] = userAgent;
-                    httpRequest["Authorization"] = $"OAuth {token}";
                     httpRequest.Proxy = proxy.Item1;
                     try
                     {
+                        nickname = CreateNickname();
+                        password = CreatePassword();
+                        try
+                        {
+                            email.NewEmail(nickname, proxy.Item1);
+                        }
+                        catch (ThreadInterruptedException) { return; }
+                        catch
+                        {
+                            Thread.Sleep(rnd.Next(100, 1000));
+                            email.NewEmail(nickname, proxy.Item1);
+                        }
                         _res = httpRequest.Get("https://twitch.tv");
                         deviceId = _res.Cookies.GetCookies("https://twitch.tv").First(x => x.Name == "unique_id").Value;
-                        kasada = SolveKasada(proxy.Item2, userAgent);
                         httpRequest["X-Device-Id"] = deviceId;
-                        //httpRequest["Client-Request-Id"] = GetRandomId(32);
-                        //httpRequest["Client-Session-Id"] = GetRandomId(16).ToLower();
+                        kasada = SolveKasada(proxy.Item2, userAgent);
                         httpRequest["x-kpsdk-ct"] = kasada.solution.xkpsdkct;
                         httpRequest["x-kpsdk-cd"] = kasada.solution.xkpsdkcd;
-                        res = httpRequest.Post("https://gql.twitch.tv/integrity").ToString();
-                        integrityToken = IntegrityTokenRegex.Match(res).Groups[1].Value;
-                        //httpRequest["Client-Session-Id"] = GetRandomId(16).ToLower();
-                        httpRequest["Client-Integrity"] = integrityToken;
-                        res = httpRequest.Post("https://gql.twitch.tv/gql", postData, "application/json").ToString();
-                        if (!res.Contains("\"id\":\"")) throw new Exception();
+                        _res = httpRequest.Post("https://passport.twitch.tv/integrity");
+                        integrityToken = IntegrityTokenRegex.Match(_res.ToString()).Groups[1].Value;
+                        httpRequest.Cookies.Add(_res.Cookies.GetCookies("https://passport.twitch.tv"));
+                        res = httpRequest.Post("https://passport.twitch.tv/protected_register",
+                            "{\"username\": \"" + nickname + "\", \"password\": \"" + password + "\", \"email\": \"" + email.address + "\", \"birthday\": {\"day\": " + rnd.Next(1, 28) + ", \"month\": " + rnd.Next(1, 11) + ", \"year\": " + rnd.Next(1970, 2003) + "}, \"client_id\": \"" + clientId + "\", \"integrity_token\": \"" + integrityToken + "\"}",
+                            "application/json").ToString();
+                        accessToken = accessTokenRegex.Match(res).Groups[1].Value;
+                        userId = userIdRegex.Match(res).Groups[1].Value;
+                        // Почта
+                        if (confirmEmail)
+                        {
+                            code = email.GetCode();
+                            kasada = SolveKasada(proxy.Item2, userAgent);
+                            httpRequest["x-kpsdk-ct"] = kasada.solution.xkpsdkct;
+                            httpRequest["x-kpsdk-cd"] = kasada.solution.xkpsdkcd;
+                            httpRequest["Authorization"] = $"OAuth {accessToken}";
+                            res = httpRequest.Post("https://gql.twitch.tv/integrity").ToString();
+                            integrityToken = IntegrityTokenRegex.Match(res).Groups[1].Value;
+                            httpRequest["Client-Integrity"] = integrityToken;
+                            res = httpRequest.Post("https://gql.twitch.tv/gql",
+                                "[{\"extensions\": {\"persistedQuery\": {\"version\": 1, \"sha256Hash\": \"05eba55c37ee4eff4dae260850dd6703d99cfde8b8ec99bc97a67e584ae9ec31\"}}, \"operationName\": \"ValidateVerificationCode\", \"variables\": {\"input\": {\"code\": \"" + code + "\", \"key\": \"" + userId + "\", \"address\": \"" + email.address + "\"}}}]",
+                                "application/json").ToString();
+                        }
+                        result.Add(accessToken);
                         Good++;
-                        Thread.Sleep(delay);
                     }
                     catch (ThreadInterruptedException) { return; }
                     catch { Bad++; }
@@ -143,28 +171,42 @@ namespace TwitchPIMP
             catch (ThreadInterruptedException) { return; }
             catch { Bad++; }
         }
-        private static string GetChannelId(string channel)
+
+        private static string CreateNickname()
         {
-            string res;
-
-            using HttpRequest httpRequest = new();
-            httpRequest["Accept-Encoding"] = "deflate";
-            httpRequest["Client-ID"] = clientId;
-            res = httpRequest.Post("https://gql.twitch.tv/gql",
-                "{\"operationName\": \"ChannelShell\", \"variables\": {\"login\": \"" + channel + "\"}, \"extensions\": {\"persistedQuery\": {\"version\": 1, \"sha256Hash\": \"580ab410bcd0c1ad194224957ae2241e5d252b2c5173d8e0cce9d32d5bb14efe\"}}}"
-                , "application/json").ToString();
-            if (res.Contains("UserDoesNotExist")) throw new Exception();
-            return channelIdRegex.Match(res).Groups[1].Value;
+            int length = rnd.Next(7, 15);
+            StringBuilder nickname = new(length);
+            bool firstVowel;
+            while (nickname.Length < length)
+            {
+                firstVowel = rnd.Next(0, 2) == 0;
+                if (firstVowel)
+                {
+                    nickname.Append(vowels[rnd.Next(0, vowels.Length)]);
+                    nickname.Append(consonants[rnd.Next(0, consonants.Length)]);
+                    continue;
+                }
+                nickname.Append(consonants[rnd.Next(0, consonants.Length)]);
+                nickname.Append(vowels[rnd.Next(0, vowels.Length)]);
+            }
+            if (rnd.Next(0, 2) == 0)
+            {
+                if (rnd.Next(0, 2) == 0)
+                    nickname.Append('_');
+                nickname.Append(rnd.Next(0, 10000));
+            }
+            if (nickname.Length > length)
+                nickname = nickname.Remove(0, nickname.Length - length);
+            return nickname.ToString();
         }
-        //private static string GetRandomId(int length)
-        //{
-        //    StringBuilder builder = new(length);
-
-        //    for (int i = 0; i < length; i++)
-        //        builder.Append(chars[rnd.Next(chars.Length)]);
-
-        //    return builder.ToString();
-        //}
+        private static string CreatePassword()
+        {
+            int length = rnd.Next(8, 30);
+            StringBuilder nickname = new(length);
+            while (nickname.Length < length)
+                nickname.Append(charsPassword[rnd.Next(0, charsPassword.Length)]);
+            return nickname.ToString();
+        }
         private KasadaResponse SolveKasada(string proxy, string userAgent)
         {
             string res;
@@ -181,64 +223,70 @@ namespace TwitchPIMP
         }
         private void Button_Start(object sender, RoutedEventArgs e)
         {
+            // TODO
             Button btn = (Button)sender;
-            string nickname;
             string threads;
-            string targetId;
-            string delay;
             string capsolverApi;
             Thread thread;
             if ((string)btn.Tag == "start")
             {
-                nickname = Nickname.Text.Trim();
                 threads = Threads.Text.Trim();
-                delay = ActionDelay.Text.Trim();
                 capsolverApi = CapsolverApi.Text.Trim();
-                if (string.IsNullOrEmpty(nickname) || string.IsNullOrWhiteSpace(nickname) || nickname.Contains('\n') || nickname.Contains('\t') || nickname.Contains("  ") ||
-                    string.IsNullOrEmpty(capsolverApi) || string.IsNullOrWhiteSpace(capsolverApi) || capsolverApi.Contains('\n') || capsolverApi.Contains('\t') || capsolverApi.Contains("  ") ||
+                if (string.IsNullOrEmpty(capsolverApi) || string.IsNullOrWhiteSpace(capsolverApi) || capsolverApi.Contains('\n') || capsolverApi.Contains('\t') || capsolverApi.Contains("  ") ||
                     string.IsNullOrEmpty(threads) || string.IsNullOrWhiteSpace(threads) || threads.Contains('\n') || threads.Contains('\t') || threads.Contains("  ") || !int.TryParse(threads, out int threadsInt) ||
-                    string.IsNullOrEmpty(delay) || string.IsNullOrWhiteSpace(delay) || delay.Contains('\n') || delay.Contains('\t') || delay.Contains("  ") || !int.TryParse(delay, out int delayInt) ||
-                    !Proxies.Any() || !Tokens.Any())
+                    !Proxies.Any())
                     return;
-                try
-                {
-                    targetId = GetChannelId(nickname);
-                }
-                catch { return; }
                 this.capsolverApi = capsolverApi;
-                postData = FollowMode.Text == "Follow" ? "[{\"operationName\": \"FollowButton_FollowUser\", \"variables\": {\"input\": {\"disableNotifications\": false, \"targetID\": \"" + targetId + "\"}}, \"extensions\": {\"persistedQuery\": {\"version\": 1, \"sha256Hash\": \"800e7346bdf7e5278a3c1d3f21b2b56e2639928f86815677a7126b093b2fdd08\"}}}]" : "[{\"operationName\":\"FollowButton_UnfollowUser\",\"variables\":{\"input\":{\"targetID\":\"" + targetId + "\"}},\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"f7dae976ebf41c755ae2d758546bfd176b4eeb856656098bb40e0a672ca0d880\"}}}]";
-                this.delay = delayInt * 1000;
-                foreach (var batch in Tokens.Batch(Tokens.Length / threadsInt))
+                this.confirmEmail = (bool)ConfirmEmail.IsChecked;
+                for (int i = 0; i < threadsInt; i++)
                 {
-                    thread = new(() => ThreadBot((string[])batch));
+                    thread = new(ThreadBot);
                     thread.Start();
                     tasks.Add(thread);
                 }
-                new Thread(() =>
-                {
-                    try
-                    {
-                        tasks.ForEach(x => x.Join());
-                        Bad = 0;
-                        Good = 0;
-                        tasks.Clear();
-                        Dispatcher.Invoke(() =>
-                        {
-                            btn.Tag = "start";
-                            btn.Content = "Start";
-                        });
-                    }
-                    catch { }
-                }).Start();
                 btn.Tag = "stop";
                 btn.Content = "Stop";
             }
             else if ((string)btn.Tag == "stop")
             {
                 btn.Tag = "stoping";
-                tasks.ForEach(x => x.Interrupt());
+                new Thread(() =>
+                {
+                    tasks.ForEach(x => x.Interrupt());
+                    tasks.ForEach(x => x.Join());
+                    Bad = 0;
+                    Good = 0;
+                    tasks.Clear();
+                    Dispatcher.Invoke(() =>
+                    {
+                        btn.Tag = "save";
+                        btn.Content = "Save";
+                        //StartBtn.Content = "Start";
+                    });
+                }).Start();
             }
-
+            else if ((string)btn.Tag == "save")
+            {
+                try
+                {
+                    string filepath;
+                    bool? result;
+                    var dialog = new Microsoft.Win32.OpenFileDialog
+                    {
+                        FileName = "Document",
+                        DefaultExt = ".txt",
+                        Filter = "Text documents (.txt)|*.txt"
+                    };
+                    result = dialog.ShowDialog();
+                    if (result is null || !(bool)result) return;
+                    filepath = dialog.FileName;
+                    File.AppendAllLines(filepath, this.result);
+                    this.result.Clear();
+                    btn.Tag = "start";
+                    btn.Content = "Start";
+                }
+                catch { }
+            }
         }
         private void Button_Upload_Proxies(object sender, RoutedEventArgs e)
         {
@@ -289,30 +337,6 @@ namespace TwitchPIMP
                     catch { }
                 }
             Proxies = proxies.ToArray();
-        }
-        private void Button_Upload_Tokens(object sender, RoutedEventArgs e)
-        {
-            if (tasks.Any()) return;
-
-            string filepath;
-            bool? result;
-            var dialog = new Microsoft.Win32.OpenFileDialog
-            {
-                FileName = "Document",
-                DefaultExt = ".txt",
-                Filter = "Text documents (.txt)|*.txt"
-            };
-            result = dialog.ShowDialog();
-            if (result is null || !(bool)result) return;
-
-            filepath = dialog.FileName;
-            Tokens = File.ReadAllLines(filepath)
-                        .Select(x => x.Trim())
-                        .Where(x =>
-                                        !(string.IsNullOrEmpty(x)
-                                        || string.IsNullOrWhiteSpace(x)
-                                        || x.Contains('\t')
-                                        || x.Contains(' '))).ToArray();
         }
         public static void UnSafeStop() => tasks.ForEach(x => x.Interrupt());
 

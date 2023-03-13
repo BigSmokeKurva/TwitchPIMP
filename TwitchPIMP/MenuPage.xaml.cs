@@ -23,7 +23,7 @@ namespace TwitchPIMP
             {"acctotoken", new ChatBotPage() },
             {"bitsender", new ChatBotPage() },
             {"subbot", new ChatBotPage() },
-            {"autoreg", new ChatBotPage() },
+            {"autoreg", new AutoregPage() },
             {"adbot", new ChatBotPage() },
         };
         public MenuPage(string time)
@@ -31,6 +31,7 @@ namespace TwitchPIMP
             InitializeComponent();
             timerThread = new(() => TimerThread(TimeSpan.Parse(time + ":00")));
             timerThread.Start();
+            Email.GetDomains();
         }
         private void TimerThread(TimeSpan time)
         {

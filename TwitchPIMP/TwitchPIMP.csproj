@@ -13,7 +13,6 @@
     <None Remove="Assets\adbot_icon.png" />
     <None Remove="Assets\autoreg_icon.png" />
     <None Remove="Assets\bad.png" />
-    <None Remove="Assets\become_a_twitch_pimp.png" />
     <None Remove="Assets\bitsender_icon.png" />
     <None Remove="Assets\button_background.png" />
     <None Remove="Assets\button_start.png" />
@@ -63,7 +62,6 @@
     <Resource Include="Assets\adbot_icon.png" />
     <Resource Include="Assets\autoreg_icon.png" />
     <Resource Include="Assets\bad.png" />
-    <Resource Include="Assets\become_a_twitch_pimp.png" />
     <Resource Include="Assets\bitsender_icon.png" />
     <Resource Include="Assets\button_background.png" />
     <Resource Include="Assets\button_start.png" />
