@@ -6,7 +6,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -105,7 +104,7 @@ namespace TwitchPIMP
             httpRequest["Accept"] = "*/*";
             httpRequest["Client-Version"] = clientVersion;
             httpRequest["Accept-Encoding"] = "deflate";
-            httpRequest["Client-Id"] = clientId; 
+            httpRequest["Client-Id"] = clientId;
             httpRequest.ConnectTimeout = 10000;
             httpRequest.KeepAliveTimeout = 10000;
             try
@@ -206,6 +205,11 @@ namespace TwitchPIMP
                 }
                 catch { return; }
                 this.capsolverApi = capsolverApi;
+                if (Configuration.other.capsolver_api != capsolverApi)
+                {
+                    Configuration.other.capsolver_api = capsolverApi;
+                    Configuration.Save();
+                }
                 postData = FollowMode.Text == "Follow" ? "[{\"operationName\": \"FollowButton_FollowUser\", \"variables\": {\"input\": {\"disableNotifications\": false, \"targetID\": \"" + targetId + "\"}}, \"extensions\": {\"persistedQuery\": {\"version\": 1, \"sha256Hash\": \"800e7346bdf7e5278a3c1d3f21b2b56e2639928f86815677a7126b093b2fdd08\"}}}]" : "[{\"operationName\":\"FollowButton_UnfollowUser\",\"variables\":{\"input\":{\"targetID\":\"" + targetId + "\"}},\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"f7dae976ebf41c755ae2d758546bfd176b4eeb856656098bb40e0a672ca0d880\"}}}]";
                 this.delay = delayInt * 1000;
                 foreach (var batch in Tokens.Batch(Tokens.Length / threadsInt))

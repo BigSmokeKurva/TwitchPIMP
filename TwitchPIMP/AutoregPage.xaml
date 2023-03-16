@@ -86,11 +86,21 @@
                             </TextBox>
                         </Viewbox>
                     </Grid>
-                    <Grid Grid.Column="1" Grid.Row="1">
-                        <Viewbox>
-                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="55,20,0,-2">
-                                <Label Content="Confirm email" FontSize="35" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" Margin="0,0,0,0"/>
-                                <ToggleButton x:Name="ConfirmEmail" Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" Margin="30,40,0,40" Padding="0,0,0,0"/>
+                    <Grid Grid.Column="1" Grid.Row="1" HorizontalAlignment="Right">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <Viewbox HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,125,0">
+                                <Label Content="Confirm email" FontSize="35" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" Margin="0,25,0,0"/>
+                                <ToggleButton x:Name="ConfirmEmail" Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" Padding="0,0,0,0" Margin="20,20,0,0"/>
+                            </StackPanel>
+                        </Viewbox>
+                        <Viewbox Grid.Row="1" HorizontalAlignment="Right">
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,125,0">
+                                <Label Content="Set Avatar" FontSize="35" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" Margin="0,25,0,0"/>
+                                <ToggleButton x:Name="SetAvatar" Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" Padding="0,0,0,0" Margin="20,20,0,0"/>
                             </StackPanel>
                         </Viewbox>
 
