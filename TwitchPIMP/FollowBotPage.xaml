@@ -174,7 +174,7 @@
                         <Label Content="Good" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
                         <Grid Margin="50,0,50,10">
                             <Image Source="/Assets/good.png"/>
-                            <Label Padding="0,0,5,0" x:Name="Testt" Content="{Binding Path=Good, Mode=TwoWay}" MaxWidth="150" FontSize="35" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Center" Margin="0,0,0,0"/>
+                            <Label Padding="0,0,5,0" Content="{Binding Path=Good, Mode=TwoWay}" MaxWidth="150" FontSize="35" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Center" Margin="0,0,0,0"/>
                         </Grid>
                         <Label Content="Bad" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
                         <Grid Margin="50,0,50,30">

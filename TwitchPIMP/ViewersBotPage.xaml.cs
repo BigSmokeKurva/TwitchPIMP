@@ -5,8 +5,6 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.Json;
-using System.Text.Json.Serialization;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Windows;
@@ -19,40 +17,11 @@ namespace TwitchPIMP
     /// </summary>
     public partial class ViewersBotPage : Page, INotifyPropertyChanged
     {
-        private class GqlTwitchPostJson
-        {
-            public class Variables
-            {
-                [JsonPropertyName("isLive")]
-                public bool isLive { get; set; }
-
-                [JsonPropertyName("login")]
-                public string login { get; set; }
-
-                [JsonPropertyName("isVod")]
-                public bool isVod { get; set; }
-
-                [JsonPropertyName("vodID")]
-                public string vodID { get; set; }
-
-                [JsonPropertyName("playerType")]
-                public string playerType { get; set; }
-            }
-
-            [JsonPropertyName("operationName")]
-            public string operationName { get; set; }
-
-            [JsonPropertyName("query")]
-            public string query { get; set; }
-
-            [JsonPropertyName("variables")]
-            public Variables variables { get; set; }
-        }
-        private static string postJson;
+        private static string postData;
         private static readonly Regex tokenRegex = new("value\":\"(.*?)\",\"signature");
         private static readonly Regex sigRegex = new("signature\":\"(.*?)\"");
         private static readonly Random rnd = new();
-        private static readonly string[] os = { "Windows NT 6.0", "Windows NT 6.1", "Windows NT 6.2", "Windows NT 6.4", "Windows NT 10.0; Win64; x64", "Windows NT 10.0", "Windows NT 10.0; WOW64", "Windows NT 10.0; Win64; x64" };
+        //private static readonly string[] os = { "Windows NT 6.0", "Windows NT 6.1", "Windows NT 6.2", "Windows NT 6.4", "Windows NT 10.0; Win64; x64", "Windows NT 10.0", "Windows NT 10.0; WOW64", "Windows NT 10.0; Win64; x64" };
         private static readonly string[] proxyTypes = new[] { "http", "socks4", "socks5" };
         private static readonly List<Thread> tasks = new();
         private string channel;
@@ -108,27 +77,13 @@ namespace TwitchPIMP
         {
             DataContext = this;
             InitializeComponent();
-            postJson = JsonSerializer.Serialize(new GqlTwitchPostJson()
-            {
-                operationName = "PlaybackAccessToken_Template",
-                query = "query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \"web\", playerBackend: \"mediaplayer\", playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}",
-                variables = new()
-                {
-                    isLive = true,
-                    login = channel,
-                    isVod = false,
-                    vodID = string.Empty,
-                    playerType = "site"
-                }
-            });
-
         }
-        private static string GetUserAgent()
-        {
-            var webkit = rnd.Next(500, 537);
-            var version = $"{rnd.Next(90, 110)}.0{rnd.Next(0, 1500)}.{rnd.Next(0, 1000)}";
-            return $"Mozilla/5.0 ({os[rnd.Next(0, os.Length)]}) AppleWebKit/{webkit}.0 (KHTML, like Gecko) Chrome/{version} Safari/{webkit}";
-        }
+        //private static string GetUserAgent()
+        //{
+        //    var webkit = rnd.Next(500, 537);
+        //    var version = $"{rnd.Next(90, 110)}.0{rnd.Next(0, 1500)}.{rnd.Next(0, 1000)}";
+        //    return $"Mozilla/5.0 ({os[rnd.Next(0, os.Length)]}) AppleWebKit/{webkit}.0 (KHTML, like Gecko) Chrome/{version} Safari/{webkit}";
+        //}
 
         //private async Task ThreadOld()
         //{
@@ -317,16 +272,17 @@ namespace TwitchPIMP
             {
                 while (true)
                 {
-                    httpRequest["User-Agent"] = GetUserAgent();
+                    httpRequest["User-Agent"] = Configuration.userAgents[rnd.Next(Configuration.userAgents.Length)];
                     httpRequest["Authorization"] = $"OAuth {Tokens[rnd.Next(0, Tokens.Length)]}";
                     httpRequest.Proxy = useProxy ? Proxies[rnd.Next(0, Proxies.Length)] : null;
                     try
                     {
-                        res = httpRequest.Post("https://gql.twitch.tv/gql", postJson, "application/json").ToString();
+                        res = httpRequest.Post("https://gql.twitch.tv/gql", postData, "application/json").ToString();
                         token = tokenRegex.Match(res).Groups[1].Value.Replace("\\", string.Empty);
                         sig = sigRegex.Match(res).Groups[1].Value;
                         res = httpRequest.Get($"https://usher.ttvnw.net/api/channel/hls/{channel}.m3u8?sig={sig}&token={token}").ToString();
                         url = res[res.IndexOf("https://")..].Trim();
+                        // TODO вариант со стабильными потоками
                         httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url);
                         Good++;
                     }
@@ -355,6 +311,8 @@ namespace TwitchPIMP
                     (useProxy && !Proxies.Any()) || !Tokens.Any())
                     return;
                 channel = nickname;
+                postData = "{\"operationName\":\"PlaybackAccessToken_Template\",\"query\":\"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \\u0022web\\u0022, playerBackend: \\u0022mediaplayer\\u0022, playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \\u0022web\\u0022, playerBackend: \\u0022mediaplayer\\u0022, playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}\",\"variables\":{\"isLive\":true,\"login\":\"" + channel + "\",\"isVod\":false,\"vodID\":\"\",\"playerType\":\"site\"}}";
+
                 for (int i = 0; i < threadsInt; i++)
                 {
                     thread = new(ThreadBot);
@@ -478,8 +436,8 @@ namespace TwitchPIMP
             filepath = dialog.FileName;
             if (proxyType != "auto")
                 foreach (var line in File.ReadAllLines(filepath)
-                                        .Select(x => x.Trim().Replace("@", ":"))
-                                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y)))))
+                                        .Select(x => x.Trim().Replace('@', ':'))
+                                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y))) && x.Contains(':')))
                 {
                     try
                     {
@@ -489,8 +447,8 @@ namespace TwitchPIMP
                 }
             else if (proxyType == "auto")
                 foreach (var line in File.ReadAllLines(filepath)
-                        .Select(x => x.Trim().Replace("@", ":"))
-                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y))))
+                        .Select(x => x.Trim().Replace('@', ':'))
+                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y)) && x.Contains(':')))
                 {
                     try
                     {

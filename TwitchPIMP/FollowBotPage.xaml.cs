@@ -21,15 +21,7 @@ namespace TwitchPIMP
     {
         private static readonly Random rnd = new();
         private static readonly string[] proxyTypes = new[] { "http", "socks4", "socks5" };
-        private static readonly char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
-        private static readonly string[] userAgents =
-        {
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; x64; rv:109.0) Gecko/20100101 Firefox/110.0",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
-        };
+        //private static readonly char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
         private static readonly List<Thread> tasks = new();
         private static readonly string clientVersion = "3040e141-5964-4d72-b67d-e73c1cf355b";
         private static readonly string clientId = "kimne78kx3ncx6brgo4mv6wki5h1ko";
@@ -111,7 +103,7 @@ namespace TwitchPIMP
             {
                 foreach (var token in tokens)
                 {
-                    userAgent = userAgents[rnd.Next(userAgents.Length)];
+                    userAgent = Configuration.userAgents[rnd.Next(Configuration.userAgents.Length)];
                     proxy = Proxies[rnd.Next(0, Proxies.Length)];
                     httpRequest["User-Agent"] = userAgent;
                     httpRequest["Authorization"] = $"OAuth {token}";
@@ -197,7 +189,7 @@ namespace TwitchPIMP
                     string.IsNullOrEmpty(capsolverApi) || string.IsNullOrWhiteSpace(capsolverApi) || capsolverApi.Contains('\n') || capsolverApi.Contains('\t') || capsolverApi.Contains("  ") ||
                     string.IsNullOrEmpty(threads) || string.IsNullOrWhiteSpace(threads) || threads.Contains('\n') || threads.Contains('\t') || threads.Contains("  ") || !int.TryParse(threads, out int threadsInt) ||
                     string.IsNullOrEmpty(delay) || string.IsNullOrWhiteSpace(delay) || delay.Contains('\n') || delay.Contains('\t') || delay.Contains("  ") || !int.TryParse(delay, out int delayInt) ||
-                    !Proxies.Any() || !Tokens.Any())
+                    !Proxies.Any() || !Tokens.Any() || threadsInt == 0)
                     return;
                 try
                 {
@@ -212,12 +204,16 @@ namespace TwitchPIMP
                 }
                 postData = FollowMode.Text == "Follow" ? "[{\"operationName\": \"FollowButton_FollowUser\", \"variables\": {\"input\": {\"disableNotifications\": false, \"targetID\": \"" + targetId + "\"}}, \"extensions\": {\"persistedQuery\": {\"version\": 1, \"sha256Hash\": \"800e7346bdf7e5278a3c1d3f21b2b56e2639928f86815677a7126b093b2fdd08\"}}}]" : "[{\"operationName\":\"FollowButton_UnfollowUser\",\"variables\":{\"input\":{\"targetID\":\"" + targetId + "\"}},\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"f7dae976ebf41c755ae2d758546bfd176b4eeb856656098bb40e0a672ca0d880\"}}}]";
                 this.delay = delayInt * 1000;
-                foreach (var batch in Tokens.Batch(Tokens.Length / threadsInt))
+                try
                 {
-                    thread = new(() => ThreadBot((string[])batch));
-                    thread.Start();
-                    tasks.Add(thread);
+                    foreach (var batch in Tokens.Batch(Tokens.Length / threadsInt))
+                    {
+                        thread = new(() => ThreadBot((string[])batch));
+                        thread.Start();
+                        tasks.Add(thread);
+                    }
                 }
+                catch { return; }
                 new Thread(() =>
                 {
                     try
@@ -267,7 +263,7 @@ namespace TwitchPIMP
             if (proxyType != "auto")
                 foreach (var line in File.ReadAllLines(filepath)
                                         .Select(x => x.Trim().Replace("@", ":"))
-                                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y)))))
+                                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y))) && x.Contains(':')))
                 {
                     try
                     {
@@ -278,7 +274,7 @@ namespace TwitchPIMP
             else if (proxyType == "auto")
                 foreach (var line in File.ReadAllLines(filepath)
                         .Select(x => x.Trim().Replace("@", ":"))
-                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y))))
+                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y)) && x.Contains(':')))
                 {
                     try
                     {

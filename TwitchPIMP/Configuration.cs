@@ -22,6 +22,14 @@ namespace TwitchPIMP
         public static readonly string ip = "127.0.0.1";
         public static readonly int port = 8888;
         public static readonly string version = "1.6b";
+        public static readonly string[] userAgents =
+        {
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; x64; rv:109.0) Gecko/20100101 Firefox/110.0",
+            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
+            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
+        };
         public static Chatbot chatbot;
         public static ConfigurationJson.Authorization authorization;
         public static ConfigurationJson.Other other;

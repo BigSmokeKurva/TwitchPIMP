@@ -14,6 +14,7 @@
     <None Remove="Assets\autoreg_icon.png" />
     <None Remove="Assets\bad.png" />
     <None Remove="Assets\bitsender_icon.png" />
+    <None Remove="Assets\bits_counter.png" />
     <None Remove="Assets\button_background.png" />
     <None Remove="Assets\button_start.png" />
     <None Remove="Assets\channel.png" />
@@ -27,6 +28,7 @@
     <None Remove="Assets\followbot_icon1.png" />
     <None Remove="Assets\good.png" />
     <None Remove="Assets\help.png" />
+    <None Remove="Assets\in_development_icon.png" />
     <None Remove="Assets\login background.png" />
     <None Remove="Assets\login_background.png" />
     <None Remove="Assets\logo.png" />
@@ -43,6 +45,7 @@
     <None Remove="Assets\tokencheck_icon.png" />
     <None Remove="Assets\update.png" />
     <None Remove="Assets\viewersbot_icon.png" />
+    <None Remove="Assets\warmup_icon.png" />
     <None Remove="Fonts\Gugi-Regular.ttf" />
     <None Remove="Fonts\Montserrat-SemiBold.ttf" />
   </ItemGroup>
@@ -64,6 +67,7 @@
     <Resource Include="Assets\autoreg_icon.png" />
     <Resource Include="Assets\bad.png" />
     <Resource Include="Assets\bitsender_icon.png" />
+    <Resource Include="Assets\bits_counter.png" />
     <Resource Include="Assets\button_background.png" />
     <Resource Include="Assets\button_start.png" />
     <Resource Include="Assets\channel.png" />
@@ -76,6 +80,7 @@
     <Resource Include="Assets\followbot_icon.png" />
     <Resource Include="Assets\good.png" />
     <Resource Include="Assets\help.png" />
+    <Resource Include="Assets\in_development_icon.png" />
     <Resource Include="Assets\login_background.png" />
     <Resource Include="Assets\logo.png" />
     <Resource Include="Assets\maximize.png" />
@@ -91,6 +96,7 @@
     <Resource Include="Assets\tokencheck_icon.png" />
     <Resource Include="Assets\update.png" />
     <Resource Include="Assets\viewersbot_icon.png" />
+    <Resource Include="Assets\warmup_icon.png" />
     <Resource Include="Fonts\Gugi-Regular.ttf" />
     <Resource Include="Fonts\Montserrat-SemiBold.ttf" />
   </ItemGroup>

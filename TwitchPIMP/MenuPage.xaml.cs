@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 using System.Windows.Navigation;
 
 namespace TwitchPIMP
@@ -19,12 +20,8 @@ namespace TwitchPIMP
             {"viewersbot", new ViewersBotPage() },
             {"chatbot", new ChatBotPage() },
             {"followbot", new FollowBotPage() },
-            {"tokencheck", new ChatBotPage() },
-            {"acctotoken", new ChatBotPage() },
-            {"bitsender", new ChatBotPage() },
-            {"subbot", new ChatBotPage() },
+            {"tokencheck", new TokenCheckPage() },
             {"autoreg", new AutoregPage() },
-            {"adbot", new ChatBotPage() },
         };
         public MenuPage(string time)
         {
@@ -32,6 +29,25 @@ namespace TwitchPIMP
             timerThread = new(() => TimerThread(TimeSpan.Parse(time + ":00")));
             timerThread.Start();
             Email.GetDomains();
+            var brushConverter = new BrushConverter();
+            Button btn = null;
+            foreach (var vb in Menu.Children)
+            {
+                if (vb.GetType() != typeof(Viewbox) || ((Viewbox)vb).Child.GetType() != typeof(Button)) continue;
+                Button button = (Button)((Viewbox)vb).Child;
+                if (!pages.ContainsKey((string)button.Tag))
+                {
+                    var sp = (StackPanel)button.Content;
+                    var image = (Image)sp.Children[0];
+                    var label = (Label)sp.Children[1];
+                    label.Foreground = (Brush)brushConverter.ConvertFrom("#FF6D6D6D");
+                    image.Source = ((Image)Resources["InDevelopmentIcon"]).Source;
+                }
+                else btn ??= button;
+            }
+
+            btn.IsEnabled = false;
+            NavigationFrame.Navigate(pages[(string)btn.Tag]);
         }
         private void TimerThread(TimeSpan time)
         {
@@ -74,7 +90,10 @@ namespace TwitchPIMP
             // subbot
             // autoreg
             // adbot
+            // warmup
             var button = (Button)sender;
+            if (!pages.ContainsKey((string)button.Tag))
+                return;
             foreach (UIElement element in Menu.Children)
             {
                 var btn = ((Viewbox)element).Child;

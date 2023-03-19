@@ -26,14 +26,6 @@ namespace TwitchPIMP
         //private static readonly char[] chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".ToCharArray();
         private static readonly char[] charsPassword = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@!_-=@!_-=".ToCharArray();
         //private static readonly char[] consonants = "qwrtpsdfghjklzxcvbnmqwrtpsdfghjklzxcvbnmQWRTPSDFGHJKLZXCVBNM_".ToCharArray();
-        private static readonly string[] userAgents =
-        {
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; x64; rv:109.0) Gecko/20100101 Firefox/110.0",
-            "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
-            "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
-        };
         private static readonly Regex avatarRegex = new("value=(.*?)>");
         private static readonly Regex uploadAvatarRegex = new("uploadURL\":\"(.*?)\"");
         private static readonly Regex IntegrityTokenRegex = new("token\":\"(.*?)\"");
@@ -101,7 +93,7 @@ namespace TwitchPIMP
             string nickname;
             string password;
             string accessToken;
-            byte[] avatar;
+            byte[] avatar = Array.Empty<byte>();
             string uploadAvatarUrl;
             (ProxyClient, string) proxy;
             KasadaResponse kasada;
@@ -118,7 +110,7 @@ namespace TwitchPIMP
                     httpRequest.ClearAllHeaders();
                     //httpRequest.Cookies?.Clear();
                     //httpRequest.ClearAllHeaders();
-                    userAgent = userAgents[rnd.Next(userAgents.Length)];
+                    userAgent = Configuration.userAgents[rnd.Next(Configuration.userAgents.Length)];
                     proxy = Proxies[rnd.Next(0, Proxies.Length)];
                     httpRequest["User-Agent"] = userAgent;
                     httpRequest["Accept"] = "*/*";
@@ -130,7 +122,7 @@ namespace TwitchPIMP
                     {
                         nickname = CreateNickname();
                         password = CreatePassword();
-                        avatar = GetAvatar();
+                        if (setAvatar) avatar = GetAvatar();
                         try
                         {
                             email.NewEmail(nickname, proxy.Item1);
@@ -195,7 +187,8 @@ namespace TwitchPIMP
                             httpRequest["Accept"] = "*/*";
                             httpRequest.Put(uploadAvatarUrl, avatar);
                         }
-                        result.Add((accessToken, $"{accessToken}:{nickname}:{password}:{email.address}:{email.password}"));
+                        lock (result)
+                            result.Add((accessToken, $"{accessToken}:{nickname}:{password}:{email.address}:{email.password}"));
                         Good++;
                     }
                     catch (ThreadInterruptedException) { return; }
@@ -288,9 +281,9 @@ namespace TwitchPIMP
             {
                 threads = Threads.Text.Trim();
                 capsolverApi = CapsolverApi.Text.Trim();
-                if (string.IsNullOrEmpty(capsolverApi) || string.IsNullOrWhiteSpace(capsolverApi) || capsolverApi.Contains('\n') || capsolverApi.Contains('\t') || capsolverApi.Contains("  ") ||
-                    string.IsNullOrEmpty(threads) || string.IsNullOrWhiteSpace(threads) || threads.Contains('\n') || threads.Contains('\t') || threads.Contains("  ") || !int.TryParse(threads, out int threadsInt) ||
-                    !Proxies.Any())
+                if (string.IsNullOrEmpty(capsolverApi) || string.IsNullOrWhiteSpace(capsolverApi) || capsolverApi.Contains('\n') || capsolverApi.Contains('\t') || capsolverApi.Contains(' ') ||
+                    string.IsNullOrEmpty(threads) || string.IsNullOrWhiteSpace(threads) || threads.Contains('\n') || threads.Contains('\t') || threads.Contains(' ') || !int.TryParse(threads, out int threadsInt) ||
+                    !Proxies.Any() || threadsInt == 0)
                     return;
                 this.capsolverApi = capsolverApi;
                 if (Configuration.other.capsolver_api != capsolverApi)
@@ -380,8 +373,8 @@ namespace TwitchPIMP
             filepath = dialog.FileName;
             if (proxyType != "auto")
                 foreach (var line in File.ReadAllLines(filepath)
-                                        .Select(x => x.Trim().Replace("@", ":"))
-                                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y)))))
+                                        .Select(x => x.Trim().Replace('@', ':'))
+                                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y))) && x.Contains(':')))
                 {
                     try
                     {
@@ -391,8 +384,8 @@ namespace TwitchPIMP
                 }
             else if (proxyType == "auto")
                 foreach (var line in File.ReadAllLines(filepath)
-                        .Select(x => x.Trim().Replace("@", ":"))
-                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y))))
+                        .Select(x => x.Trim().Replace('@', ':'))
+                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y)) && x.Contains(':')))
                 {
                     try
                     {

@@ -8,7 +8,9 @@
       d:DesignHeight="600" d:DesignWidth="1000"
       ShowsNavigationUI="False"
       Title="MenuPage">
-
+    <Page.Resources>
+        <Image x:Key="InDevelopmentIcon" Source="/Assets/in_development_icon.png"/>
+    </Page.Resources>
     <Grid>
         <Image Source="/Assets/menu_background.png" Stretch="UniformToFill"/>
         <Grid>
@@ -34,7 +36,9 @@
                     <RowDefinition/>
                     <RowDefinition/>
                     <RowDefinition/>
-                    <RowDefinition Height="2.8*"/>
+                    <RowDefinition/>
+                    <RowDefinition/>
+                    <RowDefinition Height="0.8*"/>
                     <RowDefinition Height="1.2*"/>
                 </Grid.RowDefinitions>
                 <Viewbox Grid.Row="0">
@@ -77,7 +81,7 @@
                         </Button.Content>
                     </Button>
                 </Viewbox>
-                <Viewbox Grid.Row="4">
+                <Viewbox Grid.Row="8">
                     <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="acctotoken">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
@@ -87,7 +91,7 @@
                         </Button.Content>
                     </Button>
                 </Viewbox>
-                <Viewbox Grid.Row="5">
+                <Viewbox Grid.Row="6">
                     <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="bitsender">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
@@ -97,7 +101,7 @@
                         </Button.Content>
                     </Button>
                 </Viewbox>
-                <Viewbox Grid.Row="6">
+                <Viewbox Grid.Row="7">
                     <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="subbot">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
@@ -107,7 +111,7 @@
                         </Button.Content>
                     </Button>
                 </Viewbox>
-                <Viewbox Grid.Row="7">
+                <Viewbox Grid.Row="4">
                     <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="autoreg">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
@@ -117,7 +121,17 @@
                         </Button.Content>
                     </Button>
                 </Viewbox>
-                <Viewbox Grid.Row="8">
+                <Viewbox Grid.Row="5">
+                    <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="warmup">
+                        <Button.Content>
+                            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
+                                <Image Source="/Assets/warmup_icon.png" VerticalAlignment="Center" HorizontalAlignment="Center" Margin="5,5,25,5" Height="48"/>
+                                <Label Content="Warmup" FontSize="23" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#ffffff" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Background="Transparent"/>
+                            </StackPanel>
+                        </Button.Content>
+                    </Button>
+                </Viewbox>
+                <Viewbox Grid.Row="9">
                     <Button BorderThickness="0" Background="Transparent" Style="{StaticResource MenuButton}" Click="Button_Menu_Navigate" Tag="adbot">
                         <Button.Content>
                             <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="35,0,0,0">
@@ -127,7 +141,7 @@
                         </Button.Content>
                     </Button>
                 </Viewbox>
-                <Viewbox Grid.Row="10" HorizontalAlignment="Left">
+                <Viewbox Grid.Row="12" HorizontalAlignment="Left">
                     <StackPanel Orientation="Horizontal" Margin="0,0,0,30">
                         <Button Background="Transparent" BorderThickness="0" Padding="0" Margin="30,0,0,0">
                             <Button.Content>

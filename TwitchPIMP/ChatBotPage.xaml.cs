@@ -227,7 +227,10 @@ namespace TwitchPIMP
                 cooldownTimer.Start();
                 for (int i = 0; i < threadsInt; i++)
                     tasks.Add(ThreadBot());
-                Task.WhenAll(tasks);
+                new Thread(async () =>
+                {
+                    await Task.WhenAll(tasks);
+                }).Start();
                 btn.Tag = "stop";
                 btn.Content = "Stop";
 
@@ -276,7 +279,7 @@ namespace TwitchPIMP
             if (proxyType != "auto")
                 foreach (var line in File.ReadAllLines(filepath)
                                         .Select(x => x.Trim())
-                                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y)))))
+                                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y))) && x.Contains(':')))
                 {
                     try
                     {
@@ -301,7 +304,7 @@ namespace TwitchPIMP
             else if (proxyType == "auto")
                 foreach (var line in File.ReadAllLines(filepath)
                         .Select(x => x.Trim())
-                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y))))
+                        .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y)) && x.Contains(':')))
                 {
                     try
                     {
@@ -411,6 +414,7 @@ namespace TwitchPIMP
                 spamMessages.Add(line);
             }
             this.spamMessages = spamMessages.ToArray();
+            Console.WriteLine(this.spamMessages.Length);
         }
         public static void UnSafeStop()
         {
