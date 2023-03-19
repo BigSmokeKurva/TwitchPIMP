@@ -240,19 +240,23 @@ namespace TwitchPIMP
                 btn.Tag = "stoping";
                 new Thread(() =>
                 {
-                    cancelTokenSource.Cancel();
-                    while (tasks.Any(x => x.Status == TaskStatus.Running))
-                        Thread.Sleep(100);
-                    Bad = 0;
-                    Good = 0;
-                    tasks.Clear();
-                    cooldownTimer.Stop();
-                    cooldownMessages.Clear();
-                    Dispatcher.Invoke(() =>
+                    try
                     {
-                        btn.Tag = "start";
-                        btn.Content = "Start";
-                    });
+                        cancelTokenSource.Cancel();
+                        while (tasks.Any(x => x.Status == TaskStatus.Running))
+                            Thread.Sleep(100);
+                        Bad = 0;
+                        Good = 0;
+                        tasks.Clear();
+                        cooldownTimer.Stop();
+                        cooldownMessages.Clear();
+                        Dispatcher.Invoke(() =>
+                        {
+                            btn.Tag = "start";
+                            btn.Content = "Start";
+                        });
+                    }
+                    catch { }
                 }).Start();
             }
 

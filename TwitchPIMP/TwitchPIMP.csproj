@@ -58,6 +58,7 @@
     <PackageReference Include="Bogus" Version="34.0.2" />
     <PackageReference Include="Leaf.xNet" Version="5.2.10" />
     <PackageReference Include="morelinq" Version="3.4.1" />
+    <PackageReference Include="PuppeteerSharp" Version="9.0.2" />
     <PackageReference Include="System.Management" Version="7.0.0" />
   </ItemGroup>
 

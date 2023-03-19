@@ -22,6 +22,7 @@ namespace TwitchPIMP
             {"followbot", new FollowBotPage() },
             {"tokencheck", new TokenCheckPage() },
             {"autoreg", new AutoregPage() },
+            {"warmup", new WarmupPage() },
         };
         public MenuPage(string time)
         {
