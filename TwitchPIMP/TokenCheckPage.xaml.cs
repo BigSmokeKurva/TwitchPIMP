@@ -133,11 +133,6 @@ namespace TwitchPIMP
                         res = httpRequest.Post("https://gql.twitch.tv/gql",
                             "[{\"operationName\":\"SubscriptionsManagement_SubscriptionBenefits\",\"variables\":{\"limit\":100,\"cursor\":\"1618488953\",\"filter\":\"PLATFORM\",\"platform\":\"WEB\"},\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"dc3f022290c673f53098808f1bb5148b8b9568379d312c33a089a4e17aafd9bf\"}}},{\"operationName\":\"BitsCard_Bits\",\"variables\":{},\"extensions\":{\"persistedQuery\":{\"version\":1,\"sha256Hash\":\"fe1052e19ce99f10b5bd9ab63c5de15405ce87a1644527498f0fc1aadeff89f2\"}}}]",
                             "application/json").ToString();
-                        //if (res.Contains("Unauthorized"))
-                        //{
-                        //    Bad.Add(token);
-                        //    continue;
-                        //}
                         lock (Good)
                             Good.Add(token);
                         // subscriptions
@@ -172,7 +167,6 @@ namespace TwitchPIMP
             catch (ThreadInterruptedException) { return; }
             catch { }
         }
-
         private void Button_Start(object sender, RoutedEventArgs e)
         {
             Button btn = (Button)sender;
@@ -269,6 +263,5 @@ namespace TwitchPIMP
                                         || x.Contains(' '))).ToArray();
         }
         public static void UnSafeStop() => tasks.ForEach(x => x.Interrupt());
-
     }
 }

@@ -112,9 +112,7 @@ namespace TwitchPIMP
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri) { UseShellExecute = true });
             e.Handled = true;
         }
-
         public static void UnSafeStop() => timerThread?.Interrupt();
-
         private void NavigationFrame_Navigated(object sender, NavigationEventArgs e) => NavigationFrame.NavigationService.RemoveBackEntry();
     }
 }

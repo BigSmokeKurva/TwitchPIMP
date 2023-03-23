@@ -1,11 +1,13 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <OutputType>Exe</OutputType>
+    <OutputType>WinExe</OutputType>
     <TargetFramework>net7.0-windows</TargetFramework>
     <Nullable>enable</Nullable>
     <UseWPF>true</UseWPF>
     <UseWindowsForms>True</UseWindowsForms>
+    <PackageProjectUrl></PackageProjectUrl>
+    <ApplicationIcon>logo.ico</ApplicationIcon>
   </PropertyGroup>
 
   <ItemGroup>
@@ -48,6 +50,10 @@
     <None Remove="Assets\warmup_icon.png" />
     <None Remove="Fonts\Gugi-Regular.ttf" />
     <None Remove="Fonts\Montserrat-SemiBold.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="logo.ico" />
   </ItemGroup>
 
   <ItemGroup>
@@ -100,6 +106,12 @@
     <Resource Include="Assets\warmup_icon.png" />
     <Resource Include="Fonts\Gugi-Regular.ttf" />
     <Resource Include="Fonts\Montserrat-SemiBold.ttf" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="configuration.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

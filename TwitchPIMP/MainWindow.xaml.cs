@@ -65,7 +65,6 @@ namespace TwitchPIMP
             }
 
         }
-
         private void Button_Close(object sender, RoutedEventArgs e) => Close();
         private void Button_Roll(object sender, RoutedEventArgs e) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
         private void Button_Maximize(object sender, RoutedEventArgs e)
@@ -82,10 +81,8 @@ namespace TwitchPIMP
 
             }
         }
-
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            // TODO
             MenuPage.UnSafeStop();
             ViewersBotPage.UnSafeStop();
             ChatBotPage.UnSafeStop();
@@ -94,7 +91,6 @@ namespace TwitchPIMP
             TokenCheckPage.UnSafeStop();
             WarmupPage.UnSafeStop();
         }
-
         private void NavigationFrame_Navigated(object sender, System.Windows.Navigation.NavigationEventArgs e) => NavigationFrame.NavigationService.RemoveBackEntry();
     }
 }

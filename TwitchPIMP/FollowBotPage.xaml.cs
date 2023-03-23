@@ -110,7 +110,7 @@ namespace TwitchPIMP
                     httpRequest.Proxy = proxy.Item1;
                     try
                     {
-                        _res = httpRequest.Get("https://twitch.tv");
+                        _res = httpRequest.Raw(HttpMethod.HEAD, "https://twitch.tv");
                         deviceId = _res.Cookies.GetCookies("https://twitch.tv").First(x => x.Name == "unique_id").Value;
                         kasada = SolveKasada(proxy.Item2, userAgent);
                         httpRequest["X-Device-Id"] = deviceId;
@@ -147,15 +147,6 @@ namespace TwitchPIMP
             if (res.Contains("UserDoesNotExist")) throw new Exception();
             return channelIdRegex.Match(res).Groups[1].Value;
         }
-        //private static string GetRandomId(int length)
-        //{
-        //    StringBuilder builder = new(length);
-
-        //    for (int i = 0; i < length; i++)
-        //        builder.Append(chars[rnd.Next(chars.Length)]);
-
-        //    return builder.ToString();
-        //}
         private KasadaResponse SolveKasada(string proxy, string userAgent)
         {
             string res;
@@ -315,6 +306,5 @@ namespace TwitchPIMP
                                         || x.Contains(' '))).ToArray();
         }
         public static void UnSafeStop() => tasks.ForEach(x => x.Interrupt());
-
     }
 }

@@ -58,10 +58,8 @@ namespace TwitchPIMP
             bytes = stream.Read(data, 0, data.Length);
             return Encoding.UTF8.GetString(data, 0, bytes); ;
         }
-
         private void Button_Sign_In(object sender, RoutedEventArgs e)
         {
-            // TODO
             bool saveKey = (bool)SaveKey.IsChecked;
             string key = KeyTextBox.Text.Trim();
             AuthorizationResponse response;
@@ -121,7 +119,6 @@ namespace TwitchPIMP
                 ErrorLabel.Content = "Authorization server error!";
             }
         }
-
         private void TextBox_Key_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter) Button_Sign_In(sender, new());

@@ -7,7 +7,7 @@ using System.Threading;
 
 namespace TwitchPIMP;
 
-struct KasadaResponse
+public struct KasadaResponse
 {
     public struct Solution
     {
@@ -36,7 +36,7 @@ struct KasadaResponse
     [JsonPropertyName("type")]
     public string type { get; set; }
 }
-class Email
+internal class Email
 {
     private static readonly Regex domainRegex = new("domain\":\"(.*?)\"");
     private static readonly Regex addressRegex = new("address\":\"(.*?)\"");
@@ -44,21 +44,20 @@ class Email
     private static readonly Regex codeRegex = new("\"subject\":\"(.*?) ");
     private static readonly Random rnd = new();
     private static string[] domains = Array.Empty<string>();
-    public string address;
-    public string password;
-    public string token;
+    internal string address;
+    internal string password;
+    internal string token;
     private ProxyClient proxyClient;
 
-    public static void GetDomains()
+    internal static void GetDomains()
     {
         using HttpRequest httpRequest = new();
         string res = httpRequest.Get("https://api.mail.tm/domains").ToString();
         domains = domainRegex.Matches(res).Select(domain => domain.Groups[1].Value).ToArray();
     }
-    public void NewEmail(string nickname, ProxyClient proxy)
+    internal void NewEmail(string nickname, ProxyClient proxy)
     {
         proxyClient = proxy;
-        // TODO proxy
         string res;
         this.password = $"TwitchPIMP_{rnd.Next(1000, 10000000)}!";
         string postData = "{\"address\": \"" + nickname.Replace("_", string.Empty).ToLower() + "@" + domains[rnd.Next(0, domains.Length)] + "\", \"password\": \"" + password + "\"}";
@@ -74,7 +73,7 @@ class Email
             , "application/json").ToString();
         this.token = emailTokenRegex.Match(res).Groups[1].Value;
     }
-    public string GetCode()
+    internal string GetCode()
     {
         string res;
         MatchCollection match;
@@ -94,7 +93,7 @@ class Email
         throw new Exception();
     }
 }
-struct ConfigurationJson
+public struct ConfigurationJson
 {
     public struct Authorization
     {
@@ -123,8 +122,6 @@ struct ConfigurationJson
         [JsonPropertyName("capsolver_api")]
         public string capsolver_api { get; set; }
     }
-
-
     [JsonPropertyName("authorization")]
     public Authorization authorization { get; set; }
 
@@ -134,7 +131,7 @@ struct ConfigurationJson
     [JsonPropertyName("other")]
     public Other other { get; set; }
 }
-struct AuthorizationResponse
+public struct AuthorizationResponse
 {
     public struct ConfigSoftJson
     {

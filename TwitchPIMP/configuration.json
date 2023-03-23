@@ -1,0 +1,15 @@
+{
+  "authorization": {
+    "key": ""
+  },
+  "chatbot": {
+    "thread_start_delay_interval": "10-120",
+    "delay_interval_after_advanced_messages": "50-150",
+    "advanced_messages_cooldown_interval": "6000-7200",
+    "amount_spam_interval": "15-50",
+    "delay_interval_after_spam_messages": "30-80"
+  },
+  "other": {
+    "capsolver_api": ""
+  }
+}

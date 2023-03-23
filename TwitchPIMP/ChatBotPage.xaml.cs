@@ -134,8 +134,14 @@ namespace TwitchPIMP
         private async Task ThreadBot()
         {
             ArraySegment<byte> segmentJoin = new(Encoding.UTF8.GetBytes("JOIN " + channel));
-
-            await Task.Delay(rnd.Next(Configuration.chatbot.thread_start_delay_interval.Item1, Configuration.chatbot.thread_start_delay_interval.Item2), cancelTokenSource.Token);
+            try
+            {
+                await Task.Delay(rnd.Next(Configuration.chatbot.thread_start_delay_interval.Item1, Configuration.chatbot.thread_start_delay_interval.Item2), cancelTokenSource.Token);
+            }
+            catch
+            {
+                return;
+            }
             while (!cancelTokenSource.Token.IsCancellationRequested)
             {
                 try
@@ -425,6 +431,5 @@ namespace TwitchPIMP
             cancelTokenSource?.Cancel();
             cooldownTimer.Stop();
         }
-
     }
 }

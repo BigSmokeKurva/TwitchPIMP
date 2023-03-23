@@ -80,7 +80,7 @@ namespace TwitchPIMP
                 try
                 {
                     await page.SetCookieAsync(cookie);
-                    await page.GoToAsync("https://www.twitch.tv/", waitUntil: Puppeteer.WaitUntilNavigation.Networkidle2);
+                    await page.GoToAsync("https://www.twitch.tv/", waitUntil: new[] { Puppeteer.WaitUntilNavigation.Networkidle2 }, timeout: 60000);
                     await page.Client.SendAsync("Network.clearBrowserCookies");
                     await page.Client.SendAsync("Network.clearBrowserCache");
                     Good++;
@@ -95,7 +95,6 @@ namespace TwitchPIMP
                 }
                 catch
                 {
-                    // TODO закрыть страницу BAD
                     Bad++;
                 }
             }
@@ -144,7 +143,6 @@ namespace TwitchPIMP
             }
 
         }
-
         private void Button_Upload_Tokens(object sender, RoutedEventArgs e)
         {
             if (tasks.Any()) return;
@@ -178,9 +176,8 @@ namespace TwitchPIMP
         }
         public static void UnSafeStop()
         {
-            if(browser is not null && !browser.IsClosed)
+            if (browser is not null && !browser.IsClosed)
                 browser.CloseAsync().Wait();
         }
-
     }
 }

@@ -33,12 +33,14 @@
                         <RowDefinition Height="1*"/>
                         <RowDefinition Height="1.4*"/>
                     </Grid.RowDefinitions>
-                    <Viewbox Grid.Row="0" HorizontalAlignment="Left">
-                        <StackPanel Orientation="Horizontal">
-                            <Image Source="/Assets/logo.png"/>
-                            <Label Content="TwitchPIMP" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" FontSize="53" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,0,0,10"/>
-                        </StackPanel>
-                    </Viewbox>
+                    <StackPanel Orientation="Horizontal" Grid.Row="0">
+                        <Viewbox>
+                            <Image Source="/Assets/logo.png" Margin="-93,-41,0,-100"/>
+                        </Viewbox>
+                        <Viewbox>
+                            <Label Content="TwitchPimp" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" FontSize="45" Foreground="#ffffff" VerticalAlignment="Center" Margin="-86,85,0,0"/>
+                        </Viewbox>
+                    </StackPanel>
                     <Viewbox Grid.Row="2" HorizontalAlignment="Left">
                         <Label Content="License key" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom"/>
                     </Viewbox>

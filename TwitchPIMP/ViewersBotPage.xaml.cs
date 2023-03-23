@@ -25,6 +25,7 @@ namespace TwitchPIMP
         private static readonly string[] proxyTypes = new[] { "http", "socks4", "socks5" };
         private static readonly List<Thread> tasks = new();
         private string channel;
+        private bool experimentalMode;
         private bool useProxy;
         private int _good = 0;
         private int _bad = 0;
@@ -257,6 +258,7 @@ namespace TwitchPIMP
             string token;
             string sig;
             string url;
+            string url2;
             using HttpRequest httpRequest = new();
             httpRequest.EnableEncodingContent = false;
             httpRequest.UseCookies = false;
@@ -282,9 +284,22 @@ namespace TwitchPIMP
                         sig = sigRegex.Match(res).Groups[1].Value;
                         res = httpRequest.Get($"https://usher.ttvnw.net/api/channel/hls/{channel}.m3u8?sig={sig}&token={token}").ToString();
                         url = res[res.IndexOf("https://")..].Trim();
-                        // TODO вариант со стабильными потоками
-                        httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url);
-                        Good++;
+                        if (!experimentalMode)
+                        {
+                            httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url);
+                            Good++;
+                        }
+                        else
+                        {
+                            while (true)
+                            {
+                                res = httpRequest.Raw(Leaf.xNet.HttpMethod.GET, url).ToString();
+                                url2 = res.Split('\n')[^2];
+                                Thread.Sleep(4000);
+                                res = httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url2).ToString();
+                                Good++;
+                            }
+                        }
                     }
                     catch (ThreadInterruptedException) { return; }
                     catch
@@ -311,6 +326,7 @@ namespace TwitchPIMP
                     (useProxy && !Proxies.Any()) || !Tokens.Any())
                     return;
                 channel = nickname;
+                experimentalMode = Mode.SelectedIndex == 1;
                 postData = "{\"operationName\":\"PlaybackAccessToken_Template\",\"query\":\"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \\u0022web\\u0022, playerBackend: \\u0022mediaplayer\\u0022, playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \\u0022web\\u0022, playerBackend: \\u0022mediaplayer\\u0022, playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}\",\"variables\":{\"isLive\":true,\"login\":\"" + channel + "\",\"isVod\":false,\"vodID\":\"\",\"playerType\":\"site\"}}";
 
                 for (int i = 0; i < threadsInt; i++)
@@ -343,77 +359,6 @@ namespace TwitchPIMP
             }
 
         }
-        //private void Button_Upload_Proxies(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    // HTTP or any: 188.130.143.204:5500@31254134:ProxySoxybot or 188.130.143.204:5500
-        //    // Auto: http://188.130.143.204:5500@31254134:ProxySoxybot or http://188.130.143.204:5500
-
-        //    List<WebProxy> proxies = new();
-        //    string proxyType = ProxyType.Text;
-        //    string filepath;
-        //    bool? result;
-        //    var dialog = new Microsoft.Win32.OpenFileDialog
-        //    {
-        //        FileName = "Document",
-        //        DefaultExt = ".txt",
-        //        Filter = "Text documents (.txt)|*.txt"
-        //    };
-        //    result = dialog.ShowDialog();
-        //    if (result is null || !(bool)result) return;
-
-        //    filepath = dialog.FileName;
-        //    if (proxyType != "auto")
-        //        foreach (var line in File.ReadAllLines(filepath)
-        //                                .Select(x => x.Trim())
-        //                                .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t') || proxyTypes.Any(y => x.StartsWith(y)))))
-        //        {
-        //            try
-        //            {
-        //                if (line.Contains('@') && line.Count(x => x == ':') == 2)
-        //                    proxies.Add(new WebProxy
-        //                    {
-        //                        Address = new($"{proxyType}://{line.Split('@')[0]}"),
-        //                        Credentials = new NetworkCredential()
-        //                        {
-        //                            UserName = line.Split('@')[1].Split(':')[0],
-        //                            Password = line.Split('@')[1].Split(':')[1],
-        //                        }
-        //                    });
-        //                else if (line.Count(x => x == ':') == 1)
-        //                    proxies.Add(new WebProxy
-        //                    {
-        //                        Address = new($"{proxyType}://{line}"),
-        //                    });
-        //            }
-        //            catch { }
-        //        }
-        //    else if (proxyType == "auto")
-        //        foreach (var line in File.ReadAllLines(filepath)
-        //                .Select(x => x.Trim())
-        //                .Where(x => !(string.IsNullOrEmpty(x) || string.IsNullOrWhiteSpace(x) || x.Contains('\t')) && proxyTypes.Any(y => x.StartsWith(y))))
-        //        {
-        //            try
-        //            {
-        //                if (line.Contains('@') && line.Count(x => x == ':') == 2)
-        //                    proxies.Add(new WebProxy
-        //                    {
-        //                        Address = new(line.Split('@')[0]),
-        //                        Credentials = new NetworkCredential()
-        //                        {
-        //                            UserName = line.Split('@')[1].Split(':')[0],
-        //                            Password = line.Split('@')[1].Split(':')[1],
-        //                        }
-        //                    });
-        //                else if (line.Count(x => x == ':') == 1)
-        //                    proxies.Add(new WebProxy
-        //                    {
-        //                        Address = new(line),
-        //                    });
-        //            }
-        //            catch { }
-        //        }
-        //    Proxies = proxies.ToArray();
-        //}
         private void Button_Upload_Proxies(object sender, RoutedEventArgs e)
         {
             // HTTP or any: 188.130.143.204:5500@31254134:ProxySoxybot or 188.130.143.204:5500
@@ -483,6 +428,5 @@ namespace TwitchPIMP
                                         || x.Contains(' '))).ToArray();
         }
         public static void UnSafeStop() => tasks.ForEach(x => x.Interrupt());
-
     }
 }

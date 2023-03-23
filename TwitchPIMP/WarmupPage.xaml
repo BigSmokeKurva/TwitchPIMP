@@ -6,7 +6,7 @@
       xmlns:local="clr-namespace:TwitchPIMP"
       mc:Ignorable="d" 
       d:DesignHeight="600" d:DesignWidth="1000"
-      Title="WarmupPage" Background="Green">
+      Title="WarmupPage" Background="Transparent">
 
     <Grid>
         <Grid.ColumnDefinitions>

@@ -4,25 +4,25 @@ using System.Text.Json;
 
 namespace TwitchPIMP
 {
-    class Configuration
+    internal class Configuration
     {
-        public class Chatbot
+        internal class Chatbot
         {
-            public (int, int) thread_start_delay_interval;
-            public (int, int) delay_interval_after_advanced_messages;
-            public (int, int) advanced_messages_cooldown_interval;
-            public (int, int) amount_spam_interval;
-            public (int, int) delay_interval_after_spam_messages;
+            internal (int, int) thread_start_delay_interval;
+            internal (int, int) delay_interval_after_advanced_messages;
+            internal (int, int) advanced_messages_cooldown_interval;
+            internal (int, int) amount_spam_interval;
+            internal (int, int) delay_interval_after_spam_messages;
         }
         private static readonly JsonSerializerOptions optionsSerializer = new()
         {
             Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
             WriteIndented = true
         };
-        public static readonly string ip = "127.0.0.1";
-        public static readonly int port = 8888;
-        public static readonly string version = "1.6b";
-        public static readonly string[] userAgents =
+        internal static readonly string ip = "176.119.156.39";
+        internal static readonly int port = 8888;
+        internal static readonly string version = "24.03.2023";
+        internal static readonly string[] userAgents =
         {
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0",
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/110.0",
@@ -30,11 +30,11 @@ namespace TwitchPIMP
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36",
             "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36"
         };
-        public static Chatbot chatbot;
-        public static ConfigurationJson.Authorization authorization;
-        public static ConfigurationJson.Other other;
+        internal static Chatbot chatbot;
+        internal static ConfigurationJson.Authorization authorization;
+        internal static ConfigurationJson.Other other;
 
-        public static void Parse()
+        internal static void Parse()
         {
             var deserializedJson = JsonSerializer.Deserialize<ConfigurationJson>(File.ReadAllText("configuration.json"));
             chatbot = new()
@@ -48,7 +48,7 @@ namespace TwitchPIMP
             authorization = deserializedJson.authorization;
             other = deserializedJson.other;
         }
-        public static void Save()
+        internal static void Save()
         {
             var config = JsonSerializer.Serialize(new ConfigurationJson()
             {

@@ -40,7 +40,7 @@ namespace TwitchPIMP
         private int _good = 0;
         private int _bad = 0;
         private (ProxyClient, string)[] _proxies = Array.Empty<(ProxyClient, string)>();
-        private List<(string, string)> result = new();
+        private readonly List<(string, string)> result = new();
         public int Good
         {
             get => _good;
@@ -133,7 +133,7 @@ namespace TwitchPIMP
                             Thread.Sleep(rnd.Next(100, 1000));
                             email.NewEmail(nickname, proxy.Item1);
                         }
-                        _res = httpRequest.Get("https://twitch.tv");
+                        _res = httpRequest.Raw(HttpMethod.HEAD, "https://twitch.tv");
                         deviceId = _res.Cookies.GetCookies("https://twitch.tv").First(x => x.Name == "unique_id").Value;
                         httpRequest["X-Device-Id"] = deviceId;
                         kasada = SolveKasada(proxy.Item2, userAgent);
@@ -272,7 +272,6 @@ namespace TwitchPIMP
         }
         private void Button_Start(object sender, RoutedEventArgs e)
         {
-            // TODO
             Button btn = (Button)sender;
             string threads;
             string capsolverApi;
@@ -402,6 +401,5 @@ namespace TwitchPIMP
             Proxies = proxies.ToArray();
         }
         public static void UnSafeStop() => tasks.ForEach(x => x.Interrupt());
-
     }
 }
