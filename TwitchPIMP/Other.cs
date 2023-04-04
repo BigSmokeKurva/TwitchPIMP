@@ -61,9 +61,11 @@ internal class Email
         string res;
         this.password = $"TwitchPIMP_{rnd.Next(1000, 10000000)}!";
         string postData = "{\"address\": \"" + nickname.Replace("_", string.Empty).ToLower() + "@" + domains[rnd.Next(0, domains.Length)] + "\", \"password\": \"" + password + "\"}";
+        Console.WriteLine(postData);
         using HttpRequest httpRequest = new();
         httpRequest.Proxy = proxyClient;
         httpRequest.AllowAutoRedirect = false;
+        httpRequest["Accept-Encoding"] = "deflate";
         res = httpRequest.Post("https://api.mail.tm/accounts",
             postData
             , "application/json").ToString();
@@ -80,6 +82,7 @@ internal class Email
         using HttpRequest httpRequest = new();
         httpRequest["Authorization"] = $"Bearer {token}";
         httpRequest.AllowAutoRedirect = false;
+        httpRequest["Accept-Encoding"] = "deflate";
         httpRequest.Proxy = proxyClient;
 
         for (int i = 0; i < 30; i++)

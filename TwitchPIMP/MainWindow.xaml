@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TwitchPIMP"
         mc:Ignorable="d"
-        Title="TwitchPIMP" Height="600" Width="1000" MinHeight="400" MinWidth="800" MaxHeight="2160" MaxWidth="3840" ResizeMode="NoResize" Closing="Window_Closing">
+        Title="TwitchPIMP" Height="720" Width="1280" MinHeight="400" MinWidth="800" MaxHeight="2160" MaxWidth="3840" ResizeMode="NoResize" Closing="Window_Closing">
     <WindowChrome.WindowChrome>
         <WindowChrome GlassFrameThickness="0" CornerRadius="0" CaptionHeight="0"/>
     </WindowChrome.WindowChrome>
@@ -27,7 +27,7 @@
                         </Button.Template>
                         <Image Source="/Assets/roll.png"/>
                     </Button>
-                    <Button Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Margin="5" Click="Button_Maximize">
+                    <!--<Button Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Margin="5" Click="Button_Maximize">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">
                                 <Grid Background="{TemplateBinding Background}">
@@ -36,7 +36,7 @@
                             </ControlTemplate>
                         </Button.Template>
                         <Image Source="/Assets/maximize.png"/>
-                    </Button>
+                    </Button>-->
                     <Button Background="Transparent" BorderThickness="0" BorderBrush="Transparent" Margin="5" Click="Button_Close">
                         <Button.Template>
                             <ControlTemplate TargetType="Button">

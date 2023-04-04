@@ -34,12 +34,16 @@ namespace TwitchPIMP
         public MainWindow()
         {
             InitializeComponent();
-            var preference = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
-            DwmSetWindowAttribute(
-                new WindowInteropHelper(GetWindow(this)).EnsureHandle(),
-                DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
-                ref preference,
-                sizeof(uint));
+            try
+            {
+                var preference = DWM_WINDOW_CORNER_PREFERENCE.DWMWCP_ROUND;
+                DwmSetWindowAttribute(
+                    new WindowInteropHelper(GetWindow(this)).EnsureHandle(),
+                    DWMWINDOWATTRIBUTE.DWMWA_WINDOW_CORNER_PREFERENCE,
+                    ref preference,
+                    sizeof(uint));
+            }
+            catch { }
             Configuration.Parse();
             NavigationFrame.Navigate(new Uri("AuthorizationPage.xaml", UriKind.Relative));
         }
@@ -54,33 +58,32 @@ namespace TwitchPIMP
             }
             var height = Application.Current.MainWindow.Height;
             var width = Application.Current.MainWindow.Width;
-            Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
+            //Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
             DragMove();
-            Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
+            //Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
 
             if (Application.Current.MainWindow.WindowState != WindowState.Maximized && (Application.Current.MainWindow.Height != height || Application.Current.MainWindow.Width != width))
             {
                 Application.Current.MainWindow.Height = height;
                 Application.Current.MainWindow.Width = width;
             }
-
         }
         private void Button_Close(object sender, RoutedEventArgs e) => Close();
         private void Button_Roll(object sender, RoutedEventArgs e) => Application.Current.MainWindow.WindowState = WindowState.Minimized;
-        private void Button_Maximize(object sender, RoutedEventArgs e)
-        {
-            if (Application.Current.MainWindow.WindowState == WindowState.Maximized)
-            {
-                Application.Current.MainWindow.WindowState = WindowState.Normal;
-            }
-            else
-            {
-                Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
-                Application.Current.MainWindow.WindowState = WindowState.Maximized;
-                Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
+        //private void Button_Maximize(object sender, RoutedEventArgs e)
+        //{
+        //    if (Application.Current.MainWindow.WindowState == WindowState.Maximized)
+        //    {
+        //        Application.Current.MainWindow.WindowState = WindowState.Normal;
+        //    }
+        //    else
+        //    {
+        //        Application.Current.MainWindow.ResizeMode = ResizeMode.CanResize;
+        //        Application.Current.MainWindow.WindowState = WindowState.Maximized;
+        //        Application.Current.MainWindow.ResizeMode = ResizeMode.NoResize;
 
-            }
-        }
+        //    }
+        //}
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             MenuPage.UnSafeStop();

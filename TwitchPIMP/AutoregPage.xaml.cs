@@ -123,15 +123,18 @@ namespace TwitchPIMP
                         nickname = CreateNickname();
                         password = CreatePassword();
                         if (setAvatar) avatar = GetAvatar();
-                        try
+                        if (confirmEmail)
                         {
-                            email.NewEmail(nickname, proxy.Item1);
-                        }
-                        catch (ThreadInterruptedException) { return; }
-                        catch
-                        {
-                            Thread.Sleep(rnd.Next(100, 1000));
-                            email.NewEmail(nickname, proxy.Item1);
+                            try
+                            {
+                                email.NewEmail(nickname, proxy.Item1);
+                            }
+                            catch (ThreadInterruptedException) { return; }
+                            catch
+                            {
+                                Thread.Sleep(rnd.Next(100, 1000));
+                                email.NewEmail(nickname, proxy.Item1);
+                            }
                         }
                         _res = httpRequest.Raw(HttpMethod.HEAD, "https://twitch.tv");
                         deviceId = _res.Cookies.GetCookies("https://twitch.tv").First(x => x.Name == "unique_id").Value;
@@ -192,7 +195,11 @@ namespace TwitchPIMP
                         Good++;
                     }
                     catch (ThreadInterruptedException) { return; }
-                    catch { Bad++; }
+                    catch (Exception e)
+                    {
+                        Bad++;
+                        Console.WriteLine(e);
+                    }
                 }
             }
             catch (ThreadInterruptedException) { return; }
@@ -357,7 +364,7 @@ namespace TwitchPIMP
             if (tasks.Any()) return;
 
             List<(ProxyClient, string)> proxies = new();
-            string proxyType = ProxyType.Text;
+            string proxyType = ProxyType.Text.ToLower();
             string filepath;
             bool? result;
             var dialog = new Microsoft.Win32.OpenFileDialog

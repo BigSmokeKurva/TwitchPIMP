@@ -25,7 +25,7 @@ namespace TwitchPIMP
         private static readonly string[] proxyTypes = new[] { "http", "socks4", "socks5" };
         private static readonly List<Thread> tasks = new();
         private string channel;
-        private bool experimentalMode;
+        private string mode;
         private bool useProxy;
         private int _good = 0;
         private int _bad = 0;
@@ -277,6 +277,7 @@ namespace TwitchPIMP
                     httpRequest["User-Agent"] = Configuration.userAgents[rnd.Next(Configuration.userAgents.Length)];
                     httpRequest["Authorization"] = $"OAuth {Tokens[rnd.Next(0, Tokens.Length)]}";
                     httpRequest.Proxy = useProxy ? Proxies[rnd.Next(0, Proxies.Length)] : null;
+                    Console.WriteLine(Proxies[rnd.Next(0, Proxies.Length)].GetType());
                     try
                     {
                         res = httpRequest.Post("https://gql.twitch.tv/gql", postData, "application/json").ToString();
@@ -284,22 +285,59 @@ namespace TwitchPIMP
                         sig = sigRegex.Match(res).Groups[1].Value;
                         res = httpRequest.Get($"https://usher.ttvnw.net/api/channel/hls/{channel}.m3u8?sig={sig}&token={token}").ToString();
                         url = res[res.IndexOf("https://")..].Trim();
-                        if (!experimentalMode)
+                        switch (mode)
                         {
-                            httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url);
-                            Good++;
-                        }
-                        else
-                        {
-                            while (true)
-                            {
-                                res = httpRequest.Raw(Leaf.xNet.HttpMethod.GET, url).ToString();
-                                url2 = res.Split('\n')[^2];
-                                Thread.Sleep(4000);
-                                res = httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url2).ToString();
+                            case "Default":
+                                httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url);
                                 Good++;
-                            }
+                                break;
+                            case "Mixed":
+                                for (int i = 0; i < 10; i++)
+                                {
+                                    res = httpRequest.Raw(Leaf.xNet.HttpMethod.GET, url).ToString();
+                                    url2 = res.Split('\n')[^2];
+                                    Thread.Sleep(4000);
+                                    res = httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url2).ToString();
+                                    Good++;
+                                }
+                                break;
+                            case "Experemental":
+                                while (true)
+                                {
+                                    res = httpRequest.Raw(Leaf.xNet.HttpMethod.GET, url).ToString();
+                                    url2 = res.Split('\n')[^2];
+                                    Thread.Sleep(4000);
+                                    res = httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url2).ToString();
+                                    Good++;
+                                }
                         }
+                        //if (mode == "Default")
+                        //{
+                        //    httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url);
+                        //    Good++;
+                        //}
+                        //else if (mode == "Mixed")
+                        //{
+                        //    for (int i = 0; i < 10; i++)
+                        //    {
+                        //        res = httpRequest.Raw(Leaf.xNet.HttpMethod.GET, url).ToString();
+                        //        url2 = res.Split('\n')[^2];
+                        //        Thread.Sleep(4000);
+                        //        res = httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url2).ToString();
+                        //        Good++;
+                        //    }
+                        //}
+                        //else
+                        //{
+                        //    while (true)
+                        //    {
+                        //        res = httpRequest.Raw(Leaf.xNet.HttpMethod.GET, url).ToString();
+                        //        url2 = res.Split('\n')[^2];
+                        //        Thread.Sleep(4000);
+                        //        res = httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url2).ToString();
+                        //        Good++;
+                        //    }
+                        //}
                     }
                     catch (ThreadInterruptedException) { return; }
                     catch
@@ -326,7 +364,7 @@ namespace TwitchPIMP
                     (useProxy && !Proxies.Any()) || !Tokens.Any())
                     return;
                 channel = nickname;
-                experimentalMode = Mode.SelectedIndex == 1;
+                mode = Mode.Text;
                 postData = "{\"operationName\":\"PlaybackAccessToken_Template\",\"query\":\"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \\u0022web\\u0022, playerBackend: \\u0022mediaplayer\\u0022, playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \\u0022web\\u0022, playerBackend: \\u0022mediaplayer\\u0022, playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}\",\"variables\":{\"isLive\":true,\"login\":\"" + channel + "\",\"isVod\":false,\"vodID\":\"\",\"playerType\":\"site\"}}";
 
                 for (int i = 0; i < threadsInt; i++)
@@ -366,7 +404,7 @@ namespace TwitchPIMP
             if (tasks.Any()) return;
 
             List<ProxyClient> proxies = new();
-            string proxyType = ProxyType.Text;
+            string proxyType = ProxyType.Text.ToLower();
             string filepath;
             bool? result;
             var dialog = new Microsoft.Win32.OpenFileDialog

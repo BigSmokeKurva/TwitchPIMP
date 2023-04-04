@@ -32,10 +32,9 @@ namespace TwitchPIMP
             Email.GetDomains();
             var brushConverter = new BrushConverter();
             Button btn = null;
-            foreach (var vb in Menu.Children)
+            foreach (Button button in Menu.Children)
             {
-                if (vb.GetType() != typeof(Viewbox) || ((Viewbox)vb).Child.GetType() != typeof(Button)) continue;
-                Button button = (Button)((Viewbox)vb).Child;
+                if ((string)button.Tag == string.Empty) continue;
                 if (!pages.ContainsKey((string)button.Tag))
                 {
                     var sp = (StackPanel)button.Content;
@@ -95,14 +94,11 @@ namespace TwitchPIMP
             var button = (Button)sender;
             if (!pages.ContainsKey((string)button.Tag))
                 return;
-            foreach (UIElement element in Menu.Children)
+            foreach (Button btn in Menu.Children)
             {
-                var btn = ((Viewbox)element).Child;
-                if (btn.GetType() == typeof(Button) && !btn.IsEnabled)
-                {
-                    btn.IsEnabled = true;
-                    break;
-                }
+                if ((string)btn.Tag == string.Empty || btn.IsEnabled) continue;
+                btn.IsEnabled = true;
+                break;
             }
             button.IsEnabled = false;
             NavigationFrame.Navigate(pages[(string)button.Tag]);

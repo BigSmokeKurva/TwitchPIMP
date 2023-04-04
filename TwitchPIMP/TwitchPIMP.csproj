@@ -49,7 +49,7 @@
     <None Remove="Assets\viewersbot_icon.png" />
     <None Remove="Assets\warmup_icon.png" />
     <None Remove="Fonts\Gugi-Regular.ttf" />
-    <None Remove="Fonts\Montserrat-SemiBold.ttf" />
+    <None Remove="Fonts\Inter-SemiBold.ttf" />
   </ItemGroup>
 
   <ItemGroup>
@@ -105,12 +105,12 @@
     <Resource Include="Assets\viewersbot_icon.png" />
     <Resource Include="Assets\warmup_icon.png" />
     <Resource Include="Fonts\Gugi-Regular.ttf" />
-    <Resource Include="Fonts\Montserrat-SemiBold.ttf" />
+    <Resource Include="Fonts\Inter-SemiBold.ttf" />
   </ItemGroup>
 
   <ItemGroup>
     <None Update="configuration.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

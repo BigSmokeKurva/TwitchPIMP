@@ -5,9 +5,8 @@
       xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
       xmlns:local="clr-namespace:TwitchPIMP"
       mc:Ignorable="d" 
-      d:DesignHeight="600" d:DesignWidth="1000"
+      d:DesignHeight="630" d:DesignWidth="1024"
       Title="ViewersBotPage" Background="Transparent">
-
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="3*"/>
@@ -15,140 +14,74 @@
         </Grid.ColumnDefinitions>
         <Grid Grid.Column="0">
             <Grid.RowDefinitions>
-                <RowDefinition Height="1.6*"/>
+                <RowDefinition Height="Auto"/>
                 <RowDefinition/>
             </Grid.RowDefinitions>
-            <Border Background="#991C1C1C" CornerRadius="20">
-                <Grid>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="0.8*"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="0.8*"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="0.8*"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="0.8*"/>
-                        <RowDefinition/>
-                        <RowDefinition Height="1.8*"/>
-                    </Grid.RowDefinitions>
-                    <Viewbox Grid.Row="0" HorizontalAlignment="Center">
-                        <Label Content="Nickname" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,8,0,0"/>
-                    </Viewbox>
-                    <Viewbox Grid.Row="1" HorizontalAlignment="Center">
-                        <TextBox x:Name="Nickname" Padding="2,1,2,2"   Background="#0DFFFFFF" Text="" HorizontalContentAlignment="Center" MinWidth="82" MaxWidth="82" MinHeight="20" FontSize="9" BorderThickness="0.5" BorderBrush="#25FFFFFF" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" Margin="0,3,0,0" VerticalContentAlignment="Center">
-                            <TextBox.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="3"/>
-                                </Style>
-                            </TextBox.Resources>
-                        </TextBox>
-                    </Viewbox>
-                    <Viewbox Grid.Row="2" HorizontalAlignment="Center">
-                        <Label Content="Threads" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,8,0,0"/>
-                    </Viewbox>
-                    <Viewbox Grid.Row="3" HorizontalAlignment="Center">
-                        <TextBox x:Name="Threads" Padding="2"  Background="#0DFFFFFF" MinHeight="20" FontSize="9" Text="" HorizontalContentAlignment="Center" MinWidth="55" MaxWidth="55" BorderThickness="0.5" BorderBrush="#25FFFFFF" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" Margin="0,3,0,0" VerticalContentAlignment="Center">
-                            <TextBox.Resources>
-                                <Style TargetType="{x:Type Border}">
-                                    <Setter Property="CornerRadius" Value="3"/>
-                                </Style>
-                            </TextBox.Resources>
-                        </TextBox>
-                    </Viewbox>
-                    <Viewbox Grid.Row="6" HorizontalAlignment="Center">
-                        <Label Content="Proxy type" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,8,0,0"/>
-                    </Viewbox>
-                    <StackPanel Orientation="Horizontal" Grid.Row="7" HorizontalAlignment="Center">
-                        <Viewbox HorizontalAlignment="Center">
-                            <ComboBox x:Name="ProxyType" HorizontalContentAlignment="Center" MinWidth="82" MaxWidth="82" Margin="24,3,0,0" Style="{StaticResource ProxyComboBox}" SelectedIndex="0" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="20" FontSize="9">
-                                <ComboBoxItem Content="http"/>
-                                <ComboBoxItem Content="socks5"/>
-                                <ComboBoxItem Content="socks4"/>
-                                <ComboBoxItem Content="auto"/>
-                            </ComboBox>
-                        </Viewbox>
-                        <Viewbox>
-                            <Button Background="Transparent" Margin="26,29,0,10" BorderThickness="0" Padding="0" Click="Button_Upload_Proxies" Style="{StaticResource ButtonUpload}"/>
-                        </Viewbox>
-                    </StackPanel>
-                    <StackPanel Grid.Row="8" Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,-10,0,10">
-                        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Label Content="Tokens" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="40" MaxHeight="40" MinWidth="75" MaxWidth="75" FontSize="16" Foreground="#ffffff" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Margin="68,19,33,8"/>
-                        </Viewbox>
-                        <Viewbox HorizontalAlignment="Center" VerticalAlignment="Center">
-                            <Button Background="Transparent" Margin="0,20,0,10" MaxHeight="19" BorderThickness="0"  Padding="0" Click="Button_Upload_Tokens" Style="{StaticResource ButtonUpload}"/>
-                        </Viewbox>
-                    </StackPanel>
-                    <Viewbox Grid.Row="4" HorizontalAlignment="Center">
-                        <Label Content="Mode" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,8,0,0"/>
-                    </Viewbox>
-                    <Viewbox Grid.Row="5" HorizontalAlignment="Center">
-                        <ComboBox x:Name="Mode" MinWidth="88" MaxWidth="88" Margin="0,3,0,0" Style="{StaticResource ViewersModeComboBox}" SelectedIndex="0" Foreground="#dddddd" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="20" FontSize="9" HorizontalContentAlignment="Left">
-                            <ComboBoxItem Content="default"/>
-                            <ComboBoxItem Content="experimental"/>
+            <Border Style="{StaticResource WindowBorderStyle}">
+                <StackPanel HorizontalAlignment="Center" x:Name="StackPanel1">
+                    <Label Content="Nickname" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,0"/>
+                    <TextBox x:Name="Nickname" Text="" HorizontalAlignment="Center" MinWidth="175" MaxWidth="175" Style="{StaticResource TextBoxDefaultStyle}" Margin="0,5,0,0"/>
+                    <Label Content="Threads" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,0"/>
+                    <TextBox x:Name="Threads" Text="" HorizontalAlignment="Center" MinWidth="110" MaxWidth="110" Style="{StaticResource TextBoxDefaultStyle}" Margin="0,5,0,0"/>
+                    <Label Content="Mode" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,0"/>
+                    <ComboBox x:Name="Mode" HorizontalContentAlignment="Center" SelectedIndex="0" MinWidth="200" MaxWidth="200" MinHeight="45" MaxHeight="45" FontSize="20" Foreground="#dddddd" Style="{StaticResource ProxyComboBox}" Margin="0,5,0,0">
+                        <ComboBoxItem Content="Default"/>
+                        <ComboBoxItem Content="Experemental"/>
+                        <ComboBoxItem Content="Mixed"/>
+                    </ComboBox>
+                    <Label Content="Proxy type" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,0"/>
+                    <Grid Margin="0,5,0,0">
+                        <ComboBox x:Name="ProxyType" HorizontalContentAlignment="Center" SelectedIndex="0" MinWidth="150" MaxWidth="150" MinHeight="45" MaxHeight="45" FontSize="20" Foreground="#dddddd" Style="{StaticResource ProxyComboBox}">
+                            <ComboBoxItem Content="HTTP"/>
+                            <ComboBoxItem Content="SOCKS5"/>
+                            <ComboBoxItem Content="SOCKS4"/>
+                            <ComboBoxItem Content="AUTO"/>
                         </ComboBox>
-                    </Viewbox>
-                </Grid>
+                        <Button Style="{StaticResource ButtonUpload}" Margin="234,0,0,0" HorizontalAlignment="Left" Click="Button_Upload_Proxies"/>
+                    </Grid>
+                    <Grid Margin="0,10,0,10">
+                        <Label Content="Tokens" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}"/>
+                        <Button Style="{StaticResource ButtonUpload}" Margin="234,0,0,0" HorizontalAlignment="Left" Click="Button_Upload_Tokens"/>
+                    </Grid>
+                </StackPanel>
             </Border>
-            <Viewbox Grid.Row="1">
-                <Button BorderThickness="0" Content="Start" Background="Transparent" Margin="0,70,0,370" Tag="start" Click="Button_Start" Style="{StaticResource StartButton}"/>
-            </Viewbox>
+            <Button Grid.Row="1" BorderThickness="0" Content="Start" Tag="start" Click="Button_Start" Style="{StaticResource StartButton}"/>
         </Grid>
         <Grid Grid.Column="1">
             <Grid.RowDefinitions>
+                <RowDefinition Height="{Binding ElementName=StackPanelGoodBad, Path=Height}"/>
+                <RowDefinition Height="{StaticResource WindowSplitSize}"/>
+                <RowDefinition Height="{Binding ElementName=StackPanelInfo, Path=Height}"/>
+                <RowDefinition Height="{StaticResource WindowSplitSize}"/>
+                <RowDefinition Height="{Binding ElementName=StackPanelProxy, Path=Height}"/>
                 <RowDefinition/>
-                <RowDefinition Height="0.15*"/>
-                <RowDefinition/>
-                <RowDefinition Height="0.15*"/>
-                <RowDefinition Height="0.4*"/>
-                <RowDefinition Height="0.5*"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{StaticResource WindowSplitSize}"/>
                 <ColumnDefinition/>
-                <ColumnDefinition Width="7.2*"/>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="{StaticResource WindowSplitSize}"/>
             </Grid.ColumnDefinitions>
-            <Border Grid.Row="0" Grid.Column="1" Background="#991C1C1C" CornerRadius="20">
-                <Viewbox>
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,30,0">
-                        <Label Content="Good" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
-                        <Grid Margin="50,0,50,10">
-                            <Image Source="/Assets/good.png"/>
-                            <Label Padding="0,0,5,0" Content="{Binding Path=Good, Mode=TwoWay}" MaxWidth="150" FontSize="35" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Center" Margin="0,0,0,0"/>
-                        </Grid>
-                        <Label Content="Bad" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
-                        <Grid Margin="50,0,50,30">
-                            <Image Source="/Assets/bad.png"/>
-                            <Label Padding="0,0,5,0" Content="{Binding Path=Bad, Mode=TwoWay}" MaxWidth="150" FontSize="35" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Center" Margin="0,0,0,0"/>
-                        </Grid>
-
-                    </StackPanel>
-
-                </Viewbox>
+            <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource WindowBorderStyle}">
+                <StackPanel x:Name="StackPanelGoodBad">
+                    <Label Content="Good" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,0"/>
+                    <Label Content="{Binding Path=Good, Mode=OneWay}" Style="{StaticResource LabelGoodStyle}" Margin="0,5,0,0"/>
+                    <Label Content="Bad" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,0"/>
+                    <Label Content="{Binding Path=Bad, Mode=OneWay}" Style="{StaticResource LabelBadStyle}" Margin="0,5,0,10"/>
+                </StackPanel>
             </Border>
-            <Border Grid.Row="2" Grid.Column="1" Background="#991C1C1C" CornerRadius="20">
-                <Viewbox>
-                    <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="30,0,30,0">
-                        <Label Content="Proxies" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
-                        <Grid Margin="50,0,50,10">
-                            <Image Source="/Assets/default_counter.png"/>
-                            <Label Padding="0,0,5,0" Content="{Binding Path=Proxies.Length, Mode=OneWay}" MaxWidth="150" FontSize="35" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Center" Margin="0,0,0,0"/>
-                        </Grid>
-                        <Label Content="Tokens" FontSize="30" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" VerticalAlignment="Bottom" Margin="0,0,0,0"/>
-                        <Grid Margin="50,0,50,30">
-                            <Image Source="/Assets/default_counter.png"/>
-                            <Label Padding="0,0,5,0" Content="{Binding Path=Tokens.Length, Mode=OneWay}" MaxWidth="150" FontSize="35" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontFamily="{StaticResource Montserrat SemiBold}" Foreground="#ffffff" VerticalAlignment="Center" Margin="0,0,0,0"/>
-                        </Grid>
-                    </StackPanel>
-                </Viewbox>
+            <Border Grid.Row="2" Grid.Column="1" Style="{StaticResource WindowBorderStyle}">
+                <StackPanel x:Name="StackPanelInfo">
+                    <Label Content="Proxies" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,0"/>
+                    <Label Content="{Binding Path=Proxies.Length, Mode=OneWay}" Style="{StaticResource LabelCounterDefaultStyle}" Margin="0,5,0,0"/>
+                    <Label Content="Tokens" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,0"/>
+                    <Label Content="{Binding Path=Tokens.Length, Mode=OneWay}" Style="{StaticResource LabelCounterDefaultStyle}" Margin="0,5,0,10"/>
+                </StackPanel>
             </Border>
-            <Border Grid.Row="4" Grid.Column="1" Background="#991C1C1C" CornerRadius="15">
-                <Viewbox>
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Label Content="Proxy" FontSize="40" VerticalAlignment="Center" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" FontFamily="{StaticResource Montserrat SemiBold}" MinHeight="50" MaxHeight="50" Foreground="#ffffff" Margin="0,0,0,0"/>
-                        <ToggleButton x:Name="UseProxy" Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" Margin="30,40,0,40" Padding="0,0,0,0"/>
-                    </StackPanel>
-                </Viewbox>
+            <Border Grid.Row="4" Grid.Column="1" Style="{StaticResource WindowBorderStyle}">
+                <StackPanel x:Name="StackPanelProxy" Orientation="Horizontal" HorizontalAlignment="Center">
+                    <Label Content="Proxy" HorizontalAlignment="Center" Style="{StaticResource LabelDefaultStyle}" Margin="0,10,0,10"/>
+                    <ToggleButton x:Name="UseProxy" Grid.Column="0" Style="{StaticResource SwitchStyle}" Background="Transparent" BorderThickness="0" Margin="15,0,0,0" Height="44" Width="64"/>
+                </StackPanel>
             </Border>
         </Grid>
     </Grid>

@@ -273,7 +273,7 @@ namespace TwitchPIMP
             // Auto: http://188.130.143.204:5500@31254134:ProxySoxybot or http://188.130.143.204:5500
             if (tasks.Any()) return;
             List<WebProxy> proxies = new();
-            string proxyType = ProxyType.Text;
+            string proxyType = ProxyType.Text.ToLower();
             string filepath;
             bool? result;
             var dialog = new Microsoft.Win32.OpenFileDialog

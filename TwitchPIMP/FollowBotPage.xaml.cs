@@ -238,7 +238,7 @@ namespace TwitchPIMP
             if (tasks.Any()) return;
 
             List<(ProxyClient, string)> proxies = new();
-            string proxyType = ProxyType.Text;
+            string proxyType = ProxyType.Text.ToLower();
             string filepath;
             bool? result;
             var dialog = new Microsoft.Win32.OpenFileDialog
