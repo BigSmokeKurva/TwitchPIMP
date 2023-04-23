@@ -110,7 +110,7 @@
 
   <ItemGroup>
     <None Update="configuration.json">
-      <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
 

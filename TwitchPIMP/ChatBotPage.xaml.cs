@@ -424,7 +424,6 @@ namespace TwitchPIMP
                 spamMessages.Add(line);
             }
             this.spamMessages = spamMessages.ToArray();
-            Console.WriteLine(this.spamMessages.Length);
         }
         public static void UnSafeStop()
         {

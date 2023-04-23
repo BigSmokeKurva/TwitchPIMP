@@ -252,7 +252,7 @@ namespace TwitchPIMP
         //    }
 
         //}
-        private void ThreadBot()
+        private void ThreadBot(object threadNum)
         {
             string res;
             string token;
@@ -272,12 +272,12 @@ namespace TwitchPIMP
             httpRequest.KeepAliveTimeout = 5000;
             try
             {
+                Thread.Sleep(rnd.Next(Configuration.viewersbot.thread_start_delay_interval.Item1, Configuration.viewersbot.thread_start_delay_interval.Item1) * (int)threadNum);
                 while (true)
                 {
                     httpRequest["User-Agent"] = Configuration.userAgents[rnd.Next(Configuration.userAgents.Length)];
                     httpRequest["Authorization"] = $"OAuth {Tokens[rnd.Next(0, Tokens.Length)]}";
                     httpRequest.Proxy = useProxy ? Proxies[rnd.Next(0, Proxies.Length)] : null;
-                    Console.WriteLine(Proxies[rnd.Next(0, Proxies.Length)].GetType());
                     try
                     {
                         res = httpRequest.Post("https://gql.twitch.tv/gql", postData, "application/json").ToString();
@@ -311,33 +311,6 @@ namespace TwitchPIMP
                                     Good++;
                                 }
                         }
-                        //if (mode == "Default")
-                        //{
-                        //    httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url);
-                        //    Good++;
-                        //}
-                        //else if (mode == "Mixed")
-                        //{
-                        //    for (int i = 0; i < 10; i++)
-                        //    {
-                        //        res = httpRequest.Raw(Leaf.xNet.HttpMethod.GET, url).ToString();
-                        //        url2 = res.Split('\n')[^2];
-                        //        Thread.Sleep(4000);
-                        //        res = httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url2).ToString();
-                        //        Good++;
-                        //    }
-                        //}
-                        //else
-                        //{
-                        //    while (true)
-                        //    {
-                        //        res = httpRequest.Raw(Leaf.xNet.HttpMethod.GET, url).ToString();
-                        //        url2 = res.Split('\n')[^2];
-                        //        Thread.Sleep(4000);
-                        //        res = httpRequest.Raw(Leaf.xNet.HttpMethod.HEAD, url2).ToString();
-                        //        Good++;
-                        //    }
-                        //}
                     }
                     catch (ThreadInterruptedException) { return; }
                     catch
@@ -367,10 +340,10 @@ namespace TwitchPIMP
                 mode = Mode.Text;
                 postData = "{\"operationName\":\"PlaybackAccessToken_Template\",\"query\":\"query PlaybackAccessToken_Template($login: String!, $isLive: Boolean!, $vodID: ID!, $isVod: Boolean!, $playerType: String!) {  streamPlaybackAccessToken(channelName: $login, params: {platform: \\u0022web\\u0022, playerBackend: \\u0022mediaplayer\\u0022, playerType: $playerType}) @include(if: $isLive) {    value    signature    __typename  }  videoPlaybackAccessToken(id: $vodID, params: {platform: \\u0022web\\u0022, playerBackend: \\u0022mediaplayer\\u0022, playerType: $playerType}) @include(if: $isVod) {    value    signature    __typename  }}\",\"variables\":{\"isLive\":true,\"login\":\"" + channel + "\",\"isVod\":false,\"vodID\":\"\",\"playerType\":\"site\"}}";
 
-                for (int i = 0; i < threadsInt; i++)
+                for (int i = 1; i <= threadsInt; i++)
                 {
-                    thread = new(ThreadBot);
-                    thread.Start();
+                    thread = new Thread(new ParameterizedThreadStart(ThreadBot));
+                    thread.Start(i);
                     tasks.Add(thread);
                 }
                 btn.Tag = "stop";

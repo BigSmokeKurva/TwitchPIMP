@@ -11,5 +11,8 @@
   },
   "other": {
     "capsolver_api": ""
+  },
+  "viewersbot": {
+    "thread_start_delay_interval": "1-3"
   }
 }

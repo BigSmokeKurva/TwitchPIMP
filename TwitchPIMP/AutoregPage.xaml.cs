@@ -195,10 +195,9 @@ namespace TwitchPIMP
                         Good++;
                     }
                     catch (ThreadInterruptedException) { return; }
-                    catch (Exception e)
+                    catch
                     {
                         Bad++;
-                        Console.WriteLine(e);
                     }
                 }
             }

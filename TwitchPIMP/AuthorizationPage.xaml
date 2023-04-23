@@ -48,7 +48,7 @@
                         <Label Content="Save Key" Padding="0" FontFamily="{StaticResource Inter SemiBold}" FontSize="13" Foreground="#7981d4" VerticalAlignment="Bottom" Margin="4"/>
                     </StackPanel>
                     <Label Grid.Row="3" Padding="0" FontSize="13" FontFamily="{StaticResource Inter SemiBold}" Foreground="#7981d4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4">
-                        <Hyperlink NavigateUri="https://t.me/Saint_Software" RequestNavigate="Hyperlink_Navigate" Foreground="#7981d4" TextDecorations="None">
+                        <Hyperlink NavigateUri="https://t.me/PimpTheCode" RequestNavigate="Hyperlink_Navigate" Foreground="#7981d4" TextDecorations="None">
                             Don't have a key?
                         </Hyperlink>
                     </Label>

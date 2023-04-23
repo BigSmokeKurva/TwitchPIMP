@@ -61,7 +61,6 @@ internal class Email
         string res;
         this.password = $"TwitchPIMP_{rnd.Next(1000, 10000000)}!";
         string postData = "{\"address\": \"" + nickname.Replace("_", string.Empty).ToLower() + "@" + domains[rnd.Next(0, domains.Length)] + "\", \"password\": \"" + password + "\"}";
-        Console.WriteLine(postData);
         using HttpRequest httpRequest = new();
         httpRequest.Proxy = proxyClient;
         httpRequest.AllowAutoRedirect = false;
@@ -125,6 +124,12 @@ public struct ConfigurationJson
         [JsonPropertyName("capsolver_api")]
         public string capsolver_api { get; set; }
     }
+    public struct Viewersbot
+    {
+        [JsonPropertyName("thread_start_delay_interval")]
+        public string thread_start_delay_interval { get; set; }
+    }
+
     [JsonPropertyName("authorization")]
     public Authorization authorization { get; set; }
 
@@ -133,6 +138,9 @@ public struct ConfigurationJson
 
     [JsonPropertyName("other")]
     public Other other { get; set; }
+
+    [JsonPropertyName("viewersbot")]
+    public Viewersbot viewersbot { get; set; }
 }
 public struct AuthorizationResponse
 {
