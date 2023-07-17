@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 using System.Management;
 using System.Net.Sockets;
 using System.Text;
@@ -20,6 +21,7 @@ namespace TwitchPIMP
             KeyTextBox.Text = Configuration.authorization.key;
             if (Configuration.authorization.key.Length != 0)
                 SaveKey.IsChecked = true;
+            VersionLabel.Content = "v: " + Configuration.version;
             //#if DEBUG
             //((Frame)Application.Current.MainWindow.FindName("NavigationFrame")).Navigate(new Uri("MenuPage.xaml", UriKind.Relative));
             //#endif

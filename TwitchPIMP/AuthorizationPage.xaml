@@ -69,6 +69,9 @@
                     </Button>
                 </Grid>
             </Grid>
+            <Grid Grid.Row="2">
+                <Label Grid.Row="3" Padding="0" x:Name="VersionLabel" FontSize="13" FontFamily="{StaticResource Inter SemiBold}" Foreground="#7981d4" VerticalAlignment="Bottom" HorizontalAlignment="Right" Margin="4,4,12,12"/>
+            </Grid>
         </Grid>
     </Grid>
 </Page>

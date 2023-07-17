@@ -146,7 +146,7 @@ namespace TwitchPIMP
                         integrityToken = IntegrityTokenRegex.Match(_res.ToString()).Groups[1].Value;
                         httpRequest.Cookies.Add(_res.Cookies.GetCookies("https://passport.twitch.tv"));
                         res = httpRequest.Post("https://passport.twitch.tv/protected_register",
-                            "{\"username\": \"" + nickname + "\", \"password\": \"" + password + "\", \"email\": \"" + email.address + "\", \"birthday\": {\"day\": " + rnd.Next(1, 28) + ", \"month\": " + rnd.Next(1, 11) + ", \"year\": " + rnd.Next(1970, 2003) + "}, \"client_id\": \"" + clientId + "\", \"integrity_token\": \"" + integrityToken + "\"}",
+                            $"{{\"username\": \"{nickname}\", \"password\": \"{password}\", \"email\": \"{(confirmEmail ? email.address : (nickname.Replace("_", string.Empty).ToLower() + "@g.com"))}" + "\", \"birthday\": {\"day\": " + rnd.Next(1, 28) + ", \"month\": " + rnd.Next(1, 11) + ", \"year\": " + rnd.Next(1970, 2003) + "}, \"client_id\": \"" + clientId + "\", \"integrity_token\": \"" + integrityToken + "\"}",
                             "application/json").ToString();
                         accessToken = accessTokenRegex.Match(res).Groups[1].Value;
                         userId = userIdRegex.Match(res).Groups[1].Value;

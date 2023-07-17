@@ -26,7 +26,7 @@ namespace TwitchPIMP
         };
         internal static readonly string ip = "176.119.156.39";
         internal static readonly int port = 8888;
-        internal static readonly string version = "23.04.2023";
+        internal static readonly string version = "30.04.2023";
         internal static readonly string[] userAgents =
         {
             "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/109.0",
